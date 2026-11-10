@@ -17,7 +17,10 @@ async function httpsOptions(): Promise<ServerOptions["https"]> {
   }
 }
 
-export default defineConfig(async ({ command }) => ({
+export default defineConfig(async ({ command }) => {
+  // Zertifikate nur für Dev-Server/Preview laden – nie beim Build (z. B. in GitHub Actions)
+  const https = command === "serve" ? await httpsOptions() : undefined;
+  return {
   root: resolve(import.meta.dirname, "src"),
   publicDir: resolve(import.meta.dirname, "public"),
   base: "./",
@@ -46,13 +49,13 @@ export default defineConfig(async ({ command }) => ({
   server: {
     port: 3000,
     strictPort: true,
-    https: command === "serve" ? await httpsOptions() : undefined,
+    https,
     headers: { "Access-Control-Allow-Origin": "*" },
   },
   preview: {
     port: 3000,
     strictPort: true,
-    https: await httpsOptions(),
+    https,
   },
   build: {
     outDir: resolve(import.meta.dirname, "dist"),
@@ -66,4 +69,5 @@ export default defineConfig(async ({ command }) => ({
       },
     },
   },
-}));
+  };
+});

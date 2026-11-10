@@ -135,5 +135,24 @@ scripts/                     Icon-Generator, Template-Test
 
 ## Deployment
 
-`npm run build` erzeugt statische Dateien in `dist/`. Diese auf einem HTTPS-Webserver ablegen
-und in `manifest.xml` alle `https://localhost:3000`-URLs durch die Ziel-URL ersetzen.
+### GitHub Pages (automatisch)
+
+Der Workflow [.github/workflows/deploy-pages.yml](.github/workflows/deploy-pages.yml) baut das Add-in bei
+jedem Push auf `main` (oder manuell über „Run workflow“) und veröffentlicht `dist/` auf GitHub Pages:
+
+- Add-in: `https://<user>.github.io/<repo>/taskpane/taskpane.html`
+- Manifest zum Installieren: `https://<user>.github.io/<repo>/manifest.xml`
+
+Einmalig im Repository einstellen: **Settings → Pages → Build and deployment → Source: GitHub Actions**.
+
+Das Manifest wird von `scripts/build-manifest.mjs` aus `manifest.xml` erzeugt (localhost-URLs → Pages-URL,
+eigene Add-in-ID, damit Entwicklungs- und Pages-Version parallel installiert sein können).
+Installation in Office: Manifest herunterladen und per **Einfügen → Add-ins → Meine Add-ins → Mein Add-in
+hochladen** (Word/PowerPoint/Excel im Web bzw. Microsoft 365) einbinden oder zentral über das
+Microsoft 365 Admin Center verteilen.
+
+### Anderer Webserver
+
+`npm run build` erzeugt statische Dateien in `dist/`. Diese auf einem HTTPS-Webserver ablegen und das
+Manifest mit `ADDIN_BASE_URL=https://server/pfad node scripts/build-manifest.mjs` erzeugen
+(schreibt `dist/manifest.xml`).
