@@ -1,0 +1,58 @@
+html,
+body,
+#root {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  overflow: hidden;
+}
+
+body {
+  font-family: "Segoe UI", -apple-system, BlinkMacSystemFont, Roboto, "Helvetica Neue", sans-serif;
+  background: #fafafa;
+}
+
+html[data-theme="dark"] body {
+  background: #1f1f1f;
+}
+
+.code-editor {
+  flex: 1 1 auto;
+  min-height: 0;
+  height: 100%;
+}
+
+.code-editor .cm-editor {
+  height: 100%;
+}
+
+/* Snippet-Toolbox: bei sehr schmaler Taskpane nur Symbole anzeigen */
+.snippet-toolbar {
+  container-type: inline-size;
+  width: 100%;
+}
+
+@container (max-width: 320px) {
+  .snippet-label {
+    display: none;
+  }
+}
+
+.preview-svg {
+  display: flex;
+  justify-content: center;
+  min-width: 0;
+}
+
+.preview-fit {
+  width: 100%;
+}
+
+.preview-fit svg {
+  max-width: 100% !important;
+  height: auto;
+}
+
+.preview-full svg {
+  max-width: none !important;
+}

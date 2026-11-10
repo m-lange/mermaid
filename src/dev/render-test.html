@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Mermaid Template-Test</title>
+  </head>
+  <body>
+    <!-- Wird nur von scripts/test-templates.mjs verwendet (nicht Teil des Builds) -->
+    <div id="out"></div>
+    <script type="module">
+      import { DIAGRAM_TYPES } from "../shared/templates.ts";
+      import { renderDiagram, renderSvg, formatError } from "../shared/render.ts";
+      import { snippetsFor, frontmatterEdit, expandSnippet } from "../shared/snippets.ts";
+      import { DEFAULT_OPTIONS } from "../shared/model.ts";
+
+      window.runAll = async (themes = ["default"], only = null) => {
+        const results = [];
+        for (const theme of themes) {
+          for (const t of DIAGRAM_TYPES.filter((x) => !only || only.includes(x.id))) {
+            const started = performance.now();
+            try {
+              const r = await renderDiagram(t.template, { ...DEFAULT_OPTIONS, theme }, 1.5);
+              const hasForeignObject = r.svg.includes("<foreignObject");
+              results.push({ id: t.id, theme, ok: true, w: Math.round(r.widthPx), h: Math.round(r.heightPx), ms: Math.round(performance.now() - started), foreignObject: hasForeignObject, png: r.pngBase64 });
+            } catch (e) {
+              results.push({ id: t.id, theme, ok: false, error: formatError(e) });
+            }
+          }
+        }
+        return results;
+      };
+      window.renderOne = async (code) => {
+        try {
+          const r = await renderDiagram(code, DEFAULT_OPTIONS, 1.5);
+          return { id: "code", theme: "default", ok: true, w: Math.round(r.widthPx), h: Math.round(r.heightPx), ms: 0, png: r.pngBase64 };
+        } catch (e) {
+          return { id: "code", theme: "default", ok: false, error: formatError(e) };
+        }
+      };
+      // Jedes Snippet an die Vorlage seines Typs anhängen (bzw. in den Frontmatter einfügen) und rendern
+      window.runSnippets = async (only = null) => {
+        const results = [];
+        for (const t of DIAGRAM_TYPES.filter((x) => !only || only.includes(x.id))) {
+          const lines = t.template.trimEnd().split("\n");
+          const last = [...lines].reverse().find((l) => l.trim()) ?? "";
+          const baseIndent = /^\s*/.exec(last)[0];
+          for (const sn of snippetsFor(t.id)) {
+            if (sn.test === false) continue;
+            let code;
+            if (sn.frontmatter) {
+              const e = frontmatterEdit(t.template, sn);
+              code = t.template.slice(0, e.from) + expandSnippet(e.text) + t.template.slice(e.to);
+            } else {
+              const body = expandSnippet(sn.code)
+                .split("\n")
+                .map((l) => baseIndent + l.replace(/^\t+/, (m) => "    ".repeat(m.length)))
+                .join("\n");
+              code = t.template.trimEnd() + "\n" + body + "\n";
+            }
+            try {
+              await renderSvg(code, DEFAULT_OPTIONS);
+              results.push({ id: t.id, label: sn.label, ok: true });
+            } catch (e) {
+              results.push({ id: t.id, label: sn.label, ok: false, error: formatError(e), code });
+            }
+          }
+        }
+        return results;
+      };
+      // Syntax-Highlighter über alle Vorlagen laufen lassen (hängt er, wirft CodeMirror einen Fehler)
+      window.runHighlight = async () => {
+        const { mermaidStreamLanguage } = await import("../taskpane/editor/mermaidLanguage.ts");
+        const results = [];
+        for (const t of DIAGRAM_TYPES) {
+          try {
+            const tree = mermaidStreamLanguage.parser.parse(t.template);
+            results.push({ id: t.id, ok: tree.length === t.template.length });
+          } catch (e) {
+            results.push({ id: t.id, ok: false, error: String(e) });
+          }
+        }
+        // Snippets und typische halbfertige Eingaben beim Tippen
+        const partial = ["flowchart TD\n    A[", "A((", "x{{", "graph\n  a --> b[(", 'A["unvollständig', "---\ntitle: x", "%%{init", "A@{ shape: ", "A -->|Text", "Note right of A:", "a:::", "<<", "-", "|o--", "C4Context\n  Person("];
+        const texts = [
+          ...DIAGRAM_TYPES.flatMap((t) => snippetsFor(t.id).map((sn) => ({ id: `${t.id}/${sn.label}`, text: expandSnippet(sn.code) }))),
+          ...partial.map((p, i) => ({ id: `partial-${i}`, text: p })),
+        ];
+        for (const { id, text } of texts) {
+          try {
+            mermaidStreamLanguage.parser.parse(text);
+          } catch (e) {
+            results.push({ id, ok: false, error: String(e) });
+          }
+        }
+        return results;
+      };
+      // Dokumentdesign: Parser prüfen und alle Vorlagen mit dem gelesenen Design rendern
+      window.runThemeTest = async (only = null) => {
+        const { parseThemeXml, themeFromFlatOpc, completeTheme } = await import("../shared/docTheme.ts");
+        const { setDocumentTheme } = await import("../shared/render.ts");
+        const xml = (await import("./fixtures/theme-office2013.xml?raw")).default;
+        const checks = [];
+        const parsed = parseThemeXml(xml);
+        const expect = (name, actual, expected) =>
+          checks.push({ name, ok: JSON.stringify(actual) === JSON.stringify(expected), actual, expected });
+        expect("dk1 (sysClr)", parsed.dk1, "#000000");
+        expect("lt1 (sysClr)", parsed.lt1, "#FFFFFF");
+        expect("dk2", parsed.dk2, "#44546A");
+        expect("lt2", parsed.lt2, "#E7E6E6");
+        expect("accents", parsed.accents, ["#4472C4", "#ED7D31", "#A5A5A5", "#FFC000", "#5B9BD5", "#70AD47"]);
+        expect("minor font", parsed.fontBody, "Calibri");
+        expect("major font", parsed.fontHeading, "Calibri Light");
+        // Wie Word getOoxml(): Flat-OPC-Paket mit eingebettetem Design
+        const body = xml.replace(/^<\?xml[^>]*\?>\s*/, "");
+        const flat = `<?xml version="1.0"?><pkg:package xmlns:pkg="http://schemas.microsoft.com/office/2006/xmlPackage">
+          <pkg:part pkg:name="/word/document.xml" pkg:contentType="x"><pkg:xmlData><w:document xmlns:w="urn:w"/></pkg:xmlData></pkg:part>
+          <pkg:part pkg:name="/word/theme/theme1.xml" pkg:contentType="application/vnd.openxmlformats-officedocument.theme+xml"><pkg:xmlData>${body}</pkg:xmlData></pkg:part>
+        </pkg:package>`;
+        expect("flat OPC lt2", themeFromFlatOpc(flat)?.lt2, "#E7E6E6");
+        expect("complete source", completeTheme(parsed).source, "document");
+        expect("partial source", completeTheme({ dk1: "#111111" }).source, "partial");
+
+        setDocumentTheme(completeTheme(parsed));
+        const renders = [];
+        for (const t of DIAGRAM_TYPES.filter((x) => !only || only.includes(x.id))) {
+          try {
+            const r = await renderDiagram(t.template, { ...DEFAULT_OPTIONS, theme: "document" }, 1.5);
+            const usesFont = r.svg.includes("Calibri");
+            renders.push({ id: t.id, theme: "document", ok: true, w: Math.round(r.widthPx), h: Math.round(r.heightPx), ms: 0, png: r.pngBase64, usesFont, usesFill: /#e7e6e6/i.test(r.svg), usesLine: /#44546a/i.test(r.svg) });
+          } catch (e) {
+            renders.push({ id: t.id, theme: "document", ok: false, error: formatError(e) });
+          }
+        }
+        return { checks, renders };
+      };
+      window.ready = true;
+    </script>
+  </body>
+</html>

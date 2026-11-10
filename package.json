@@ -1,0 +1,53 @@
+{
+  "name": "mermaid-office-addin",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Office Add-in (Word, Excel, PowerPoint) zum Einfügen und Bearbeiten von Mermaid-Diagrammen",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc --noEmit && vite build",
+    "preview": "vite preview",
+    "typecheck": "tsc --noEmit",
+    "certs": "office-addin-dev-certs install",
+    "icons": "node scripts/generate-icons.mjs",
+    "validate": "office-addin-manifest validate manifest.xml",
+    "start:word": "office-addin-debugging start manifest.xml desktop --app word --no-debug --dev-server \"npm run dev\" --dev-server-port 3000",
+    "start:excel": "office-addin-debugging start manifest.xml desktop --app excel --no-debug --dev-server \"npm run dev\" --dev-server-port 3000",
+    "start:powerpoint": "office-addin-debugging start manifest.xml desktop --app powerpoint --no-debug --dev-server \"npm run dev\" --dev-server-port 3000",
+    "stop": "office-addin-debugging stop manifest.xml",
+    "test:templates": "node scripts/test-templates.mjs",
+    "test:ui": "node scripts/test-ui.mjs",
+    "test": "npm run build && npm run test:templates && npm run test:ui"
+  },
+  "dependencies": {
+    "@codemirror/autocomplete": "^6.20.4",
+    "@codemirror/commands": "^6.11.1",
+    "@codemirror/language": "^6.13.1",
+    "@codemirror/search": "^6.7.2",
+    "@codemirror/state": "^6.7.6",
+    "@codemirror/view": "^6.43.15",
+    "@fluentui/react-components": "^9.75.1",
+    "@fluentui/react-icons": "^2.0.345",
+    "@lezer/highlight": "^1.2.5",
+    "@mermaid-js/layout-elk": "^1.0.2",
+    "codemirror": "^6.0.2",
+    "fflate": "^0.8.3",
+    "mermaid": "^12.3.0",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1"
+  },
+  "devDependencies": {
+    "@types/office-js": "^1.0.617",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "@vitejs/plugin-react": "^6.3.0",
+    "office-addin-debugging": "^7.0.1",
+    "office-addin-dev-certs": "^3.0.1",
+    "office-addin-manifest": "^3.0.1",
+    "playwright-core": "^1.65.0",
+    "sharp": "^0.35.5",
+    "typescript": "^7.0.2",
+    "vite": "^8.3.7"
+  }
+}
