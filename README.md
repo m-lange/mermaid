@@ -156,3 +156,12 @@ Microsoft 365 Admin Center verteilen.
 `npm run build` erzeugt statische Dateien in `dist/`. Diese auf einem HTTPS-Webserver ablegen und das
 Manifest mit `ADDIN_BASE_URL=https://server/pfad node scripts/build-manifest.mjs` erzeugen
 (schreibt `dist/manifest.xml`).
+
+## Lizenz
+
+Dieses Projekt steht unter der **GNU General Public License v3.0** – siehe [LICENSE](LICENSE).
+
+Verwendete Bibliotheken behalten ihre eigenen Lizenzen; alle sind mit der GPL-3.0 vereinbar, u. a.
+[Mermaid](https://github.com/mermaid-js/mermaid) (MIT), Fluent UI, React, CodeMirror, fflate (MIT),
+DOMPurify (MPL-2.0 oder Apache-2.0) und elkjs (EPL-2.0 oder GPL-3.0-or-later).
+„Mermaid“ ist der Name des gleichnamigen Open-Source-Projekts; dieses Add-in ist kein offizielles Produkt davon.

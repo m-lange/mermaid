@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "description": "Office Add-in (Word, Excel, PowerPoint) zum Einfügen und Bearbeiten von Mermaid-Diagrammen",
+  "license": "GPL-3.0-only",
   "type": "module",
   "scripts": {
     "dev": "vite",
