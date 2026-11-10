@@ -6,11 +6,13 @@ import {
   idFromTag,
   initialSizePt,
   isSetSupported,
+  missingSets,
   tagFor,
   updatedSizePt,
   type DocumentDiagramElement,
   type HostAdapter,
 } from "./hostAdapter";
+import { tr } from "../shared/strings";
 
 /** Maximale Breite/Höhe (pt), ungefähr Satzspiegel einer A4-Seite */
 const MAX_W = 450;
@@ -23,6 +25,11 @@ const MAX_H = 640;
 export class WordAdapter implements HostAdapter {
   readonly kind = "Word" as const;
   readonly supportsSelectionDetection = true;
+
+  /** Inhaltssteuerelemente mit Bildern, Auswahl im Steuerelement */
+  missingRequirements() {
+    return missingSets([["WordApi", "1.3"]]);
+  }
   readonly store: DiagramStore;
 
   constructor() {
@@ -77,7 +84,7 @@ export class WordAdapter implements HostAdapter {
 
       const cc = pic.insertContentControl();
       cc.tag = tagFor(record.id);
-      cc.title = `Mermaid: ${typeLabel}`;
+      cc.title = tr("ccTitle", { label: typeLabel });
       cc.appearance = "BoundingBox";
       cc.select();
       await ctx.sync();
@@ -102,7 +109,7 @@ export class WordAdapter implements HostAdapter {
         pic.width = size.width;
         pic.height = size.height;
         applyAltText(pic, record, typeLabel);
-        cc.title = `Mermaid: ${typeLabel}`;
+        cc.title = tr("ccTitle", { label: typeLabel });
       });
       await ctx.sync();
       return ccs.items.length;
@@ -160,6 +167,6 @@ export class WordAdapter implements HostAdapter {
 }
 
 function applyAltText(pic: Word.InlinePicture, record: DiagramRecord, typeLabel: string) {
-  pic.altTextTitle = `Mermaid-Diagramm: ${typeLabel}`;
+  pic.altTextTitle = tr("altTitle", { label: typeLabel });
   pic.altTextDescription = record.code.length > 4000 ? record.code.substring(0, 4000) + " …" : record.code;
 }

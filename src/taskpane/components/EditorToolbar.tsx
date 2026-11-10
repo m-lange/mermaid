@@ -31,31 +31,32 @@ import {
 import type { FluentIcon } from "@fluentui/react-icons";
 import type { BackgroundMode, DiagramOptions, MermaidLook, MermaidTheme } from "../../shared/model";
 import { expandSnippet, snippetsFor, type Snippet, type SnippetGroup } from "../../shared/snippets";
+import { tr, type StringKey } from "../../shared/strings";
 
-const THEMES: { value: MermaidTheme; label: string }[] = [
-  { value: "document", label: "Dokument" },
-  { value: "default", label: "Standard" },
-  { value: "neutral", label: "Neutral" },
-  { value: "forest", label: "Wald" },
-  { value: "dark", label: "Dunkel" },
-  { value: "base", label: "Basis" },
+const THEMES: { value: MermaidTheme; label: StringKey }[] = [
+  { value: "document", label: "themeDocument" },
+  { value: "default", label: "themeDefault" },
+  { value: "neutral", label: "themeNeutral" },
+  { value: "forest", label: "themeForest" },
+  { value: "dark", label: "themeDark" },
+  { value: "base", label: "themeBase" },
 ];
-const LOOKS: { value: MermaidLook; label: string }[] = [
-  { value: "classic", label: "Klassisch" },
-  { value: "handDrawn", label: "Handgezeichnet" },
+const LOOKS: { value: MermaidLook; label: StringKey }[] = [
+  { value: "classic", label: "lookClassic" },
+  { value: "handDrawn", label: "lookHandDrawn" },
 ];
-const BACKGROUNDS: { value: BackgroundMode; label: string }[] = [
-  { value: "white", label: "Weiß" },
-  { value: "transparent", label: "Transparent" },
-  { value: "theme", label: "Wie Design" },
+const BACKGROUNDS: { value: BackgroundMode; label: StringKey }[] = [
+  { value: "white", label: "bgWhite" },
+  { value: "transparent", label: "bgTransparent" },
+  { value: "theme", label: "bgTheme" },
 ];
 
-const SNIPPET_BUTTONS: { id: SnippetGroup; icon: FluentIcon; title: string }[] = [
-  { id: "nodes", icon: ShapesRegular, title: "Elemente einfügen" },
-  { id: "edges", icon: ArrowRoutingRegular, title: "Kanten und Pfeile einfügen" },
-  { id: "structure", icon: GroupRegular, title: "Struktur einfügen (Gruppen, Blöcke, Notizen)" },
-  { id: "style", icon: PaintBrushRegular, title: "Stile einfügen (Farben, Klassen)" },
-  { id: "general", icon: MoreHorizontalRegular, title: "Mehr: Kommentare und Konfiguration" },
+const SNIPPET_BUTTONS: { id: SnippetGroup; icon: FluentIcon; title: StringKey }[] = [
+  { id: "nodes", icon: ShapesRegular, title: "insertNodes" },
+  { id: "edges", icon: ArrowRoutingRegular, title: "insertEdges" },
+  { id: "structure", icon: GroupRegular, title: "insertStructure" },
+  { id: "style", icon: PaintBrushRegular, title: "insertStyle" },
+  { id: "general", icon: MoreHorizontalRegular, title: "insertMore" },
 ];
 
 const useStyles = makeStyles({
@@ -88,7 +89,10 @@ interface Props {
 export function EditorToolbar({ typeId, options, onOptionsChange, onInsert, onRefreshTheme, disabled }: Props) {
   const s = useStyles();
   const snippets = useMemo(() => snippetsFor(typeId), [typeId]);
-  const labelOf = <T,>(list: { value: T; label: string }[], v: T) => list.find((x) => x.value === v)?.label ?? "";
+  const labelOf = <T,>(list: { value: T; label: StringKey }[], v: T) => {
+    const key = list.find((x) => x.value === v)?.label;
+    return key ? tr(key) : "";
+  };
 
   const setTheme = (theme: MermaidTheme) =>
     // Dunkles Design braucht einen dunklen Hintergrund
@@ -99,7 +103,7 @@ export function EditorToolbar({ typeId, options, onOptionsChange, onInsert, onRe
     name: string,
     title: string,
     Icon: FluentIcon,
-    list: { value: T; label: string }[],
+    list: { value: T; label: StringKey }[],
     value: T,
     onChange: (v: T) => void,
     extra?: React.ReactNode,
@@ -119,7 +123,7 @@ export function EditorToolbar({ typeId, options, onOptionsChange, onInsert, onRe
               <MenuGroupHeader>{title}</MenuGroupHeader>
               {list.map((o) => (
                 <MenuItemRadio key={o.value} name={name} value={o.value} disabled={isDisabled?.(o.value)}>
-                  {o.label}
+                  {tr(o.label)}
                 </MenuItemRadio>
               ))}
             </MenuGroup>
@@ -146,7 +150,7 @@ export function EditorToolbar({ typeId, options, onOptionsChange, onInsert, onRe
     return (
       <Menu key={id} positioning="below-start">
         <MenuTrigger disableButtonEnhancement>
-          <Tooltip content={title} relationship="label" withArrow>
+          <Tooltip content={tr(title)} relationship="label" withArrow>
             <ToolbarButton icon={<Icon />} disabled={disabled} data-snippet-group={id} />
           </Tooltip>
         </MenuTrigger>
@@ -155,11 +159,11 @@ export function EditorToolbar({ typeId, options, onOptionsChange, onInsert, onRe
             {inline.length > 0 && frontmatter.length > 0 ? (
               <>
                 <MenuGroup>
-                  <MenuGroupHeader>An der Cursorposition</MenuGroupHeader>
+                  <MenuGroupHeader>{tr("atCursor")}</MenuGroupHeader>
                   {inline.map(renderItem)}
                 </MenuGroup>
                 <MenuGroup>
-                  <MenuGroupHeader>Konfiguration (Frontmatter)</MenuGroupHeader>
+                  <MenuGroupHeader>{tr("frontmatter")}</MenuGroupHeader>
                   {frontmatter.map(renderItem)}
                 </MenuGroup>
               </>
@@ -173,10 +177,10 @@ export function EditorToolbar({ typeId, options, onOptionsChange, onInsert, onRe
   };
 
   return (
-    <Toolbar className={s.toolbar} size="small" aria-label="Editor-Werkzeuge">
+    <Toolbar className={s.toolbar} size="small" aria-label={tr("toolbar")}>
       {optionMenu(
         "theme",
-        "Design",
+        tr("design"),
         ColorRegular,
         THEMES,
         options.theme,
@@ -184,14 +188,14 @@ export function EditorToolbar({ typeId, options, onOptionsChange, onInsert, onRe
         <>
           <MenuDivider />
           <MenuItem icon={<ArrowSyncRegular />} onClick={onRefreshTheme}>
-            Design aus Dokument neu einlesen
+            {tr("rereadTheme")}
           </MenuItem>
         </>,
       )}
-      {optionMenu("look", "Darstellung", InkStrokeRegular, LOOKS, options.look, (look) => onOptionsChange({ ...options, look }))}
+      {optionMenu("look", tr("look"), InkStrokeRegular, LOOKS, options.look, (look) => onOptionsChange({ ...options, look }))}
       {optionMenu(
         "background",
-        "Hintergrund",
+        tr("background"),
         PaintBucketRegular,
         BACKGROUNDS,
         options.background,

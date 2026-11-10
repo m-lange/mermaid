@@ -6,20 +6,19 @@
            xsi:type="TaskPaneApp">
   <Id>47161bcd-3a68-4970-bf8f-e99cc699b952</Id>
   <Version>1.0.0.0</Version>
-  <ProviderName>Mermaid Office Add-in</ProviderName>
-  <DefaultLocale>de-DE</DefaultLocale>
-  <DisplayName DefaultValue="Mermaid Diagramme">
-    <Override Locale="en-US" Value="Mermaid Diagrams" />
+  <ProviderName>Martin Lange</ProviderName>
+  <DefaultLocale>en-US</DefaultLocale>
+  <DisplayName DefaultValue="Mermaid Editor for Word, Excel &amp; PowerPoint">
+    <Override Locale="de-DE" Value="Mermaid Editor for Word, Excel &amp; PowerPoint" />
   </DisplayName>
-  <Description DefaultValue="Mermaid-Diagramme und Charts einfügen und bearbeiten – in Word, Excel und PowerPoint.">
-    <Override Locale="en-US" Value="Insert and edit Mermaid diagrams and charts in Word, Excel and PowerPoint." />
+  <Description DefaultValue="Insert and edit Mermaid diagrams and charts – flowcharts, sequence, class, Gantt, pie charts and more – with live preview in Word, Excel and PowerPoint.">
+    <Override Locale="de-DE" Value="Mermaid-Diagramme und Charts einfügen und bearbeiten – Fluss-, Sequenz-, Klassen-, Gantt-, Kreisdiagramme und mehr – mit Live-Vorschau in Word, Excel und PowerPoint." />
   </Description>
   <IconUrl DefaultValue="https://localhost:3000/assets/icon-32.png" />
   <HighResolutionIconUrl DefaultValue="https://localhost:3000/assets/icon-64.png" />
-  <SupportUrl DefaultValue="https://mermaid.js.org" />
+  <SupportUrl DefaultValue="https://localhost:3000/support.html" />
   <AppDomains>
     <AppDomain>https://mermaid.js.org</AppDomain>
-    <AppDomain>https://mermaid.live</AppDomain>
   </AppDomains>
   <Hosts>
     <Host Name="Document" />
@@ -161,25 +160,25 @@
         <bt:Image id="Icon.80x80" DefaultValue="https://localhost:3000/assets/icon-80.png" />
       </bt:Images>
       <bt:Urls>
-        <bt:Url id="GetStarted.LearnMoreUrl" DefaultValue="https://mermaid.js.org/intro/" />
+        <bt:Url id="GetStarted.LearnMoreUrl" DefaultValue="https://localhost:3000/support.html" />
         <bt:Url id="Commands.Url" DefaultValue="https://localhost:3000/commands/commands.html" />
         <bt:Url id="Taskpane.Url" DefaultValue="https://localhost:3000/taskpane/taskpane.html" />
       </bt:Urls>
       <bt:ShortStrings>
-        <bt:String id="GetStarted.Title" DefaultValue="Mermaid Diagramme ist bereit">
-          <bt:Override Locale="en-US" Value="Mermaid Diagrams is ready" />
+        <bt:String id="GetStarted.Title" DefaultValue="Mermaid Editor is ready">
+          <bt:Override Locale="de-DE" Value="Mermaid Editor ist bereit" />
         </bt:String>
         <bt:String id="Group.Label" DefaultValue="Mermaid" />
-        <bt:String id="TaskpaneButton.Label" DefaultValue="Mermaid-Diagramm">
-          <bt:Override Locale="en-US" Value="Mermaid Diagram" />
+        <bt:String id="TaskpaneButton.Label" DefaultValue="Mermaid Diagram">
+          <bt:Override Locale="de-DE" Value="Mermaid-Diagramm" />
         </bt:String>
       </bt:ShortStrings>
       <bt:LongStrings>
-        <bt:String id="GetStarted.Description" DefaultValue="Öffnen Sie über Einfügen &gt; Mermaid-Diagramm den Editor, um Diagramme einzufügen oder zu bearbeiten.">
-          <bt:Override Locale="en-US" Value="Use Insert &gt; Mermaid Diagram to open the editor and insert or edit diagrams." />
+        <bt:String id="GetStarted.Description" DefaultValue="Use Insert &gt; Mermaid Diagram to open the editor and insert or edit diagrams.">
+          <bt:Override Locale="de-DE" Value="Öffnen Sie über Einfügen &gt; Mermaid-Diagramm den Editor, um Diagramme einzufügen oder zu bearbeiten." />
         </bt:String>
-        <bt:String id="TaskpaneButton.Tooltip" DefaultValue="Mermaid-Diagramme und Charts einfügen oder das ausgewählte Diagramm bearbeiten.">
-          <bt:Override Locale="en-US" Value="Insert Mermaid diagrams and charts or edit the selected diagram." />
+        <bt:String id="TaskpaneButton.Tooltip" DefaultValue="Insert Mermaid diagrams and charts or edit the selected diagram.">
+          <bt:Override Locale="de-DE" Value="Mermaid-Diagramme und Charts einfügen oder das ausgewählte Diagramm bearbeiten." />
         </bt:String>
       </bt:LongStrings>
     </Resources>

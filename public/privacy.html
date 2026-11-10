@@ -1,0 +1,198 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Privacy Policy / Datenschutz – Mermaid Editor for Word, Excel &amp; PowerPoint</title>
+<meta name="description" content="Privacy policy of the Mermaid Editor add-in for Microsoft Word, Excel and PowerPoint: everything runs locally, no data is sent to the developer.">
+<link rel="icon" type="image/png" href="assets/icon-32.png">
+<style>
+  :root {
+    color-scheme: light dark;
+    --bg: #ffffff; --fg: #1b1c1f; --muted: #575b63; --border: #d9dce1;
+    --surface: #f4f6f8; --accent: #0f6cbd; --accent-fg: #ffffff;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #151619; --fg: #e9eaed; --muted: #a8adb6; --border: #353840;
+      --surface: #1f2126; --accent: #79b8ff; --accent-fg: #0b0c0e;
+    }
+  }
+  *, *::before, *::after { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    margin: 0; background: var(--bg); color: var(--fg);
+    font: 16px/1.6 system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  }
+  a { color: var(--accent); text-underline-offset: 2px; }
+  a:focus-visible, summary:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; border-radius: 3px; }
+  .skip { position: absolute; left: -9999px; top: 0; background: var(--accent); color: var(--accent-fg); padding: .5rem 1rem; }
+  .skip:focus { left: 1rem; top: 1rem; z-index: 10; }
+  .wrap { max-width: 52rem; margin: 0 auto; padding: 0 1rem; }
+  header.site { border-bottom: 1px solid var(--border); background: var(--surface); }
+  header.site .wrap { display: flex; flex-wrap: wrap; align-items: center; gap: .75rem 1.5rem; padding-top: .9rem; padding-bottom: .9rem; }
+  .brand { display: flex; align-items: center; gap: .6rem; color: var(--fg); text-decoration: none; font-weight: 600; line-height: 1.25; }
+  .brand img { width: 40px; height: 40px; flex: none; }
+  nav.main { display: flex; flex-wrap: wrap; gap: .25rem 1rem; font-size: .95rem; }
+  nav.main a[aria-current="page"] { font-weight: 600; color: var(--fg); text-decoration: none; }
+  .lang { margin-left: auto; font-size: .9rem; color: var(--muted); }
+  .lang a { font-weight: 600; }
+  main { padding: 1.5rem 0 2.5rem; }
+  section[lang] + section[lang] { margin-top: 3rem; padding-top: 2rem; border-top: 2px solid var(--border); }
+  h1 { font-size: 1.75rem; line-height: 1.25; margin: 0 0 .25rem; }
+  h2 { font-size: 1.3rem; margin: 2rem 0 .5rem; }
+  h3 { font-size: 1.05rem; margin: 1.5rem 0 .25rem; }
+  .meta { color: var(--muted); font-size: .9rem; margin: 0 0 1.5rem; }
+  code, kbd { font-family: ui-monospace, "Cascadia Code", Consolas, monospace; font-size: .92em; background: var(--surface); border: 1px solid var(--border); border-radius: 4px; padding: 0 .3em; }
+  .note { background: var(--surface); border-left: 4px solid var(--accent); padding: .75rem 1rem; border-radius: 0 6px 6px 0; }
+  .button { display: inline-block; background: var(--accent); color: var(--accent-fg); text-decoration: none; font-weight: 600; padding: .55rem 1rem; border-radius: 6px; }
+  table { border-collapse: collapse; width: 100%; font-size: .95rem; }
+  th, td { text-align: left; border-bottom: 1px solid var(--border); padding: .4rem .5rem; vertical-align: top; }
+  footer.site { border-top: 1px solid var(--border); background: var(--surface); color: var(--muted); font-size: .88rem; }
+  footer.site .wrap { padding-top: 1.25rem; padding-bottom: 1.5rem; }
+  footer.site nav { display: flex; flex-wrap: wrap; gap: .25rem 1rem; margin-bottom: .75rem; }
+  footer.site p { margin: .35rem 0; }
+  @media (max-width: 36rem) { .lang { margin-left: 0; width: 100%; } h1 { font-size: 1.45rem; } }
+  @media print { header.site nav, .lang, .skip { display: none; } }
+</style>
+</head>
+<body>
+<a class="skip" href="#content">Skip to content / Zum Inhalt</a>
+<header class="site">
+  <div class="wrap">
+    <a class="brand" href="support.html"><img src="assets/icon-64.png" alt="" width="40" height="40"><span>Mermaid Editor<br><small>for Word, Excel &amp; PowerPoint</small></span></a>
+    <nav class="main" aria-label="Pages / Seiten">
+      <a href="support.html">Support</a>
+      <a href="privacy.html" aria-current="page">Privacy / Datenschutz</a>
+      <a href="terms.html">Terms / Nutzungsbedingungen</a>
+    </nav>
+    <p class="lang"><a href="#en" hreflang="en" lang="en">English</a> · <a href="#de" hreflang="de" lang="de">Deutsch</a></p>
+  </div>
+</header>
+
+<main id="content" class="wrap">
+
+<!--
+  TODO (publisher): Depending on where the publisher lives and how the add-in is offered, a postal
+  address and further provider information may be legally required (e.g. controller identity and
+  address under Art. 13 GDPR, "Impressum"/provider identification under German law – § 5 DDG,
+  formerly § 5 TMG). Add the publisher's real name and postal address (and any other mandatory
+  details) here and in an Impressum before publishing. Do NOT use placeholder or invented data.
+  Recommendation: have this policy reviewed by a legal professional.
+-->
+<section id="en" lang="en">
+  <h1>Privacy Policy</h1>
+  <p class="meta">Mermaid Editor for Word, Excel &amp; PowerPoint · Last updated: 2026-11-10</p>
+
+  <p>This privacy policy applies to the Office add-in <strong>“Mermaid Editor for Word, Excel &amp; PowerPoint”</strong> (the “add-in”) and to these web pages at <code>m-lange.github.io/mermaid</code>.</p>
+
+  <h2>Summary</h2>
+  <ul>
+    <li>The add-in runs entirely locally in the Office task pane. Your diagrams and documents are <strong>not</strong> sent to the developer or to any server operated by the developer.</li>
+    <li>No accounts, no sign-in, no tracking, no analytics or telemetry, no advertising, no cookies.</li>
+    <li>Your diagram code is stored only inside your own document.</li>
+  </ul>
+
+  <h2>Controller and contact</h2>
+  <p>Responsible for this add-in: Martin Lange. Contact: via <a href="https://github.com/m-lange/mermaid/issues">GitHub Issues</a>. Please note that issues are public; do not include personal or confidential data.</p>
+
+  <h2>What the add-in processes</h2>
+  <h3>Diagram content and documents</h3>
+  <p>Diagrams are rendered locally in the task pane (the browser engine built into Office) using the open-source Mermaid library. The Mermaid source code of each diagram is saved inside your document – in a Custom XML Part and in the alt text of the inserted PNG image – so that you can edit the diagram later. To insert or update diagrams, apply your document's theme colors and fonts and find existing diagrams, the add-in reads and writes the necessary parts of the open document through the Office JavaScript API. This data stays in your document and on your device (or in the storage you chose for the document, such as OneDrive or SharePoint, under the terms of that service). The developer has no access to it.</p>
+
+  <h3>Local settings</h3>
+  <p>The add-in stores exactly one user interface preference in the browser storage of the task pane (<code>localStorage</code>, key <code>mermaid.previewMode</code>): whether the live preview is shown in the document or in the task pane. This value never leaves your device and can be removed by clearing the Office/web browser cache.</p>
+
+  <h3>No personal data collected by the developer</h3>
+  <p>The add-in does not collect, store or transmit personal data to the developer. It contains no analytics, crash reporting, telemetry or advertising, does not use cookies and does not require an account. Random identifiers (generated with <code>crypto.randomUUID</code>) are used only to link each diagram to its stored code inside your document; they do not identify you.</p>
+
+  <h2>Third-party services involved in loading the add-in</h2>
+  <h3>GitHub Pages (hosting)</h3>
+  <p>The add-in’s static files (HTML, JavaScript, images) and these web pages are served by GitHub Pages, a service of GitHub, Inc. When your Office application loads the add-in, GitHub necessarily receives technical access data such as your IP address, date and time of the request, and browser/user-agent information, and may store it in server logs, for example for security purposes. The developer does not receive or evaluate these logs. See the <a href="https://docs.github.com/site-policy/privacy-policies/github-general-privacy-statement">GitHub General Privacy Statement</a>.</p>
+
+  <h3>Microsoft (Office.js)</h3>
+  <p>As required by Microsoft for Office add-ins, the Office JavaScript library (Office.js) is loaded from Microsoft’s content delivery network (<code>appsforoffice.microsoft.com</code>). Microsoft processes technical access data for this. Your use of Office itself is governed by Microsoft’s terms. See the <a href="https://privacy.microsoft.com/privacystatement">Microsoft Privacy Statement</a>.</p>
+
+  <h3>External links</h3>
+  <p>The add-in contains links to the Mermaid documentation (<code>mermaid.js.org</code>) and to GitHub. These websites are only opened when you click such a link; their own privacy policies apply.</p>
+
+  <h2>Legal basis (for users in the EU/EEA)</h2>
+  <p>To the extent that personal data is processed at all (technical access data during delivery of the add-in files), this is based on the legitimate interest in providing the add-in securely and reliably (Art. 6(1)(f) GDPR).</p>
+
+  <h2>Your rights</h2>
+  <p>Depending on applicable law, you may have the right to access, rectification, erasure, restriction of processing, data portability and objection, and the right to lodge a complaint with a data protection supervisory authority. As the developer does not store personal data about you, requests concerning hosting logs or Office.js should be directed to GitHub or Microsoft respectively. You can delete the data stored by the add-in in a document by deleting the diagrams and, for diagrams marked as “orphaned” in the task pane list, using “Delete diagram data”; the local preference is removed by clearing the Office/browser cache.</p>
+
+  <h2>Children</h2>
+  <p>The add-in is not directed at children and does not knowingly collect data from anyone.</p>
+
+  <h2>Changes to this policy</h2>
+  <p>This policy may be updated when the add-in changes. The current version is always available at <a href="https://m-lange.github.io/mermaid/privacy.html">m-lange.github.io/mermaid/privacy.html</a>; the history of changes is visible in the <a href="https://github.com/m-lange/mermaid">GitHub repository</a>.</p>
+</section>
+
+<section id="de" lang="de">
+  <h1>Datenschutzerklärung</h1>
+  <p class="meta">Mermaid Editor for Word, Excel &amp; PowerPoint · Stand: 10.11.2026</p>
+
+  <p>Diese Datenschutzerklärung gilt für das Office-Add-in <strong>„Mermaid Editor for Word, Excel &amp; PowerPoint“</strong> (das „Add-in“) sowie für diese Webseiten unter <code>m-lange.github.io/mermaid</code>.</p>
+
+  <h2>Kurzfassung</h2>
+  <ul>
+    <li>Das Add-in läuft vollständig lokal im Office-Aufgabenbereich. Ihre Diagramme und Dokumente werden <strong>nicht</strong> an den Entwickler oder an vom Entwickler betriebene Server übertragen.</li>
+    <li>Keine Konten, keine Anmeldung, kein Tracking, keine Analyse oder Telemetrie, keine Werbung, keine Cookies.</li>
+    <li>Ihr Diagrammcode wird ausschließlich in Ihrem eigenen Dokument gespeichert.</li>
+  </ul>
+
+  <h2>Verantwortlicher und Kontakt</h2>
+  <p>Verantwortlich für dieses Add-in: Martin Lange. Kontakt: über <a href="https://github.com/m-lange/mermaid/issues">GitHub Issues</a>. Bitte beachten Sie, dass Issues öffentlich sind; geben Sie dort keine personenbezogenen oder vertraulichen Daten an.</p>
+
+  <h2>Was das Add-in verarbeitet</h2>
+  <h3>Diagramminhalte und Dokumente</h3>
+  <p>Diagramme werden lokal im Aufgabenbereich (der in Office integrierten Browser-Engine) mit der Open-Source-Bibliothek Mermaid gerendert. Der Mermaid-Quellcode jedes Diagramms wird in Ihrem Dokument gespeichert – in einer Custom XML Part und im Alternativtext des eingefügten PNG-Bildes –, damit Sie das Diagramm später bearbeiten können. Um Diagramme einzufügen oder zu aktualisieren, Designfarben und Schriftarten des Dokuments zu übernehmen und vorhandene Diagramme zu finden, liest und schreibt das Add-in die dafür nötigen Teile des geöffneten Dokuments über die Office-JavaScript-API. Diese Daten bleiben in Ihrem Dokument und auf Ihrem Gerät (bzw. in dem von Ihnen gewählten Speicherort des Dokuments, z. B. OneDrive oder SharePoint, nach den Bedingungen dieses Dienstes). Der Entwickler hat darauf keinen Zugriff.</p>
+
+  <h3>Lokale Einstellungen</h3>
+  <p>Das Add-in speichert genau eine Einstellung der Benutzeroberfläche im Browser-Speicher des Aufgabenbereichs (<code>localStorage</code>, Schlüssel <code>mermaid.previewMode</code>): ob die Live-Vorschau im Dokument oder im Aufgabenbereich angezeigt wird. Dieser Wert verlässt Ihr Gerät nicht und kann durch Leeren des Office-/Browser-Caches entfernt werden.</p>
+
+  <h3>Keine Erhebung personenbezogener Daten durch den Entwickler</h3>
+  <p>Das Add-in erhebt, speichert oder übermittelt keine personenbezogenen Daten an den Entwickler. Es enthält keine Analyse-, Absturzberichts-, Telemetrie- oder Werbefunktionen, verwendet keine Cookies und erfordert kein Konto. Zufällige Kennungen (erzeugt mit <code>crypto.randomUUID</code>) dienen nur dazu, jedes Diagramm in Ihrem Dokument mit seinem gespeicherten Code zu verknüpfen; sie identifizieren nicht Sie als Person.</p>
+
+  <h2>Beim Laden des Add-ins beteiligte Drittanbieter</h2>
+  <h3>GitHub Pages (Hosting)</h3>
+  <p>Die statischen Dateien des Add-ins (HTML, JavaScript, Bilder) und diese Webseiten werden über GitHub Pages bereitgestellt, einen Dienst der GitHub, Inc. Wenn Ihre Office-Anwendung das Add-in lädt, erhält GitHub technisch notwendig Zugriffsdaten wie Ihre IP-Adresse, Datum und Uhrzeit des Abrufs sowie Browser-/User-Agent-Informationen und kann diese, z. B. aus Sicherheitsgründen, in Server-Logs speichern. Der Entwickler erhält diese Logs nicht und wertet sie nicht aus. Siehe <a href="https://docs.github.com/site-policy/privacy-policies/github-general-privacy-statement">GitHub General Privacy Statement</a>.</p>
+
+  <h3>Microsoft (Office.js)</h3>
+  <p>Wie von Microsoft für Office-Add-ins vorgeschrieben, wird die Office-JavaScript-Bibliothek (Office.js) aus dem Content Delivery Network von Microsoft (<code>appsforoffice.microsoft.com</code>) geladen. Microsoft verarbeitet dabei technische Zugriffsdaten. Für die Nutzung von Office selbst gelten die Bedingungen von Microsoft. Siehe <a href="https://privacy.microsoft.com/privacystatement">Microsoft-Datenschutzerklärung</a>.</p>
+
+  <h3>Externe Links</h3>
+  <p>Das Add-in enthält Links zur Mermaid-Dokumentation (<code>mermaid.js.org</code>) und zu GitHub. Diese Websites werden nur geöffnet, wenn Sie einen solchen Link anklicken; es gelten deren eigene Datenschutzerklärungen.</p>
+
+  <h2>Rechtsgrundlage (für Nutzer in der EU/im EWR)</h2>
+  <p>Soweit überhaupt personenbezogene Daten verarbeitet werden (technische Zugriffsdaten bei der Auslieferung der Add-in-Dateien), erfolgt dies auf Grundlage des berechtigten Interesses an einer sicheren und zuverlässigen Bereitstellung des Add-ins (Art. 6 Abs. 1 lit. f DSGVO).</p>
+
+  <h2>Ihre Rechte</h2>
+  <p>Nach geltendem Recht haben Sie ggf. das Recht auf Auskunft, Berichtigung, Löschung, Einschränkung der Verarbeitung, Datenübertragbarkeit und Widerspruch sowie das Recht auf Beschwerde bei einer Datenschutz-Aufsichtsbehörde. Da der Entwickler keine personenbezogenen Daten über Sie speichert, richten Sie Anfragen zu Hosting-Logs bzw. Office.js bitte an GitHub bzw. Microsoft. Die vom Add-in in einem Dokument gespeicherten Daten löschen Sie, indem Sie die Diagramme löschen und für in der Liste des Aufgabenbereichs als „verwaist“ markierte Diagramme „Diagrammdaten löschen“ verwenden; die lokale Einstellung entfernen Sie durch Leeren des Office-/Browser-Caches.</p>
+
+  <h2>Kinder</h2>
+  <p>Das Add-in richtet sich nicht an Kinder und erhebt wissentlich von niemandem Daten.</p>
+
+  <h2>Änderungen dieser Erklärung</h2>
+  <p>Diese Erklärung kann angepasst werden, wenn sich das Add-in ändert. Die aktuelle Fassung ist stets unter <a href="https://m-lange.github.io/mermaid/privacy.html">m-lange.github.io/mermaid/privacy.html</a> abrufbar; der Änderungsverlauf ist im <a href="https://github.com/m-lange/mermaid">GitHub-Repository</a> einsehbar.</p>
+</section>
+
+</main>
+
+<footer class="site">
+  <div class="wrap">
+    <nav aria-label="Footer">
+      <a href="support.html">Support</a>
+      <a href="privacy.html">Privacy / Datenschutz</a>
+      <a href="terms.html">Terms / Nutzungsbedingungen</a>
+      <a href="https://github.com/m-lange/mermaid">GitHub</a>
+      <a href="https://github.com/m-lange/mermaid/blob/main/LICENSE">License (GPL-3.0-only)</a>
+      <a href="third-party-notices.txt">Third-party notices</a>
+    </nav>
+    <p>© 2026 Martin Lange. Mermaid Editor for Word, Excel &amp; PowerPoint is free software licensed under GPL-3.0-only.</p>
+    <p>Microsoft, Word, Excel, PowerPoint and Office are trademarks of the Microsoft group of companies. “Mermaid” is the name of an independent open-source project. This add-in is not affiliated with, sponsored or endorsed by Microsoft or the Mermaid project.</p>
+  </div>
+</footer>
+</body>
+</html>

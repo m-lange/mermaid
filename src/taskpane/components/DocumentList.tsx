@@ -12,6 +12,7 @@ import { ArrowClockwiseRegular, DeleteRegular, EditRegular } from "@fluentui/rea
 import type { DiagramRecord } from "../../shared/model";
 import { getDiagramType } from "../../shared/templates";
 import { iconFor } from "../icons";
+import { tr } from "../../shared/strings";
 
 export interface ListEntry {
   record: DiagramRecord;
@@ -58,12 +59,12 @@ export function DocumentList({ entries, loading, onRefresh, onEdit, onDelete }: 
   return (
     <div className={s.root}>
       <div className={s.header}>
-        <Subtitle2>In diesem Dokument</Subtitle2>
-        <Tooltip content="Liste aktualisieren" relationship="label">
+        <Subtitle2>{tr("inDocument")}</Subtitle2>
+        <Tooltip content={tr("refreshList")} relationship="label">
           <Button size="small" appearance="subtle" icon={loading ? <Spinner size="extra-tiny" /> : <ArrowClockwiseRegular />} onClick={onRefresh} />
         </Tooltip>
       </div>
-      {entries && entries.length === 0 && <Caption1 className={s.empty}>Noch keine Mermaid-Diagramme vorhanden.</Caption1>}
+      {entries && entries.length === 0 && <Caption1 className={s.empty}>{tr("noDiagrams")}</Caption1>}
       <div className={s.rows}>
       {entries?.map(({ record, occurrences, location }) => {
         const type = getDiagramType(record.type);
@@ -83,25 +84,25 @@ export function DocumentList({ entries, loading, onRefresh, onEdit, onDelete }: 
             </div>
             {occurrences === 0 ? (
               <>
-                <Tooltip content="Die Diagrammdaten sind gespeichert, aber im Dokument existiert kein zugehöriges Element mehr." relationship="description">
+                <Tooltip content={tr("orphanedHint")} relationship="description">
                   <Badge appearance="tint" color="warning" size="small">
-                    verwaist
+                    {tr("orphaned")}
                   </Badge>
                 </Tooltip>
-                <Tooltip content="Diagrammdaten löschen" relationship="label">
+                <Tooltip content={tr("deleteData")} relationship="label">
                   <Button size="small" appearance="subtle" icon={<DeleteRegular />} onClick={() => onDelete(record.id)} />
                 </Tooltip>
               </>
             ) : (
               <>
                 {occurrences > 1 && (
-                  <Tooltip content={`${occurrences} Elemente teilen sich diesen Code`} relationship="description">
+                  <Tooltip content={tr("sharedCode", { n: occurrences })} relationship="description">
                     <Badge appearance="tint" size="small">
                       {occurrences}×
                     </Badge>
                   </Tooltip>
                 )}
-                <Tooltip content="Auswählen und bearbeiten" relationship="label">
+                <Tooltip content={tr("selectAndEdit")} relationship="label">
                   <Button size="small" appearance="subtle" icon={<EditRegular />} onClick={() => onEdit(record.id)} />
                 </Tooltip>
               </>

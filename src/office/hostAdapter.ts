@@ -65,6 +65,8 @@ export interface HostAdapter {
   /** Kann die Auswahl eines Diagramms im Dokument erkannt werden? */
   readonly supportsSelectionDetection: boolean;
 
+  /** Fehlende, zwingend benötigte API-Requirement-Sets (leer = unterstützt) */
+  missingRequirements?(): string[];
   /** UUID des aktuell ausgewählten Diagramms oder null */
   getSelectedDiagramId(): Promise<string | null>;
   /** Fügt ein neues Diagramm an der aktuellen Position ein */
@@ -105,6 +107,11 @@ export function addDocumentSelectionHandler(handler: () => void): Promise<() => 
       resolve(() => undefined);
     }
   });
+}
+
+/** Liefert alle nicht unterstützten Requirement-Sets aus der Liste [Name, Version] */
+export function missingSets(sets: [string, string][]): string[] {
+  return sets.filter(([n, v]) => !isSetSupported(n, v)).map(([n, v]) => `${n} ${v}`);
 }
 
 export function isSetSupported(name: string, version: string) {

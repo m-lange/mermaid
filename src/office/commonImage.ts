@@ -1,3 +1,5 @@
+import { tr } from "../shared/strings";
+
 /** Fügt ein Bild über die gemeinsame Office-API an der aktuellen Auswahl ein. */
 export function setSelectedImage(
   base64: string,
@@ -11,7 +13,7 @@ export function setSelectedImage(
     if (opts.height !== undefined) options.imageHeight = opts.height;
     Office.context.document.setSelectedDataAsync(base64, options, (r) => {
       if (r.status === Office.AsyncResultStatus.Succeeded) resolve();
-      else reject(new Error(r.error?.message || "Bild konnte nicht eingefügt werden."));
+      else reject(new Error(r.error?.message || tr("imageInsertFailed")));
     });
   });
 }

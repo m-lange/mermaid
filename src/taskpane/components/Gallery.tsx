@@ -10,8 +10,9 @@ import {
   mergeClasses,
 } from "@fluentui/react-components";
 import { SearchRegular } from "@fluentui/react-icons";
-import { DIAGRAM_TYPES, type DiagramTypeDef } from "../../shared/templates";
+import { diagramTypes, type DiagramTypeDef } from "../../shared/templates";
 import { iconFor } from "../icons";
+import { tr } from "../../shared/strings";
 
 const useStyles = makeStyles({
   root: { display: "flex", flexDirection: "column", gap: "14px" },
@@ -58,8 +59,9 @@ export function Gallery({ disabled, onInsert }: Props) {
 
   const filtered = useMemo(() => {
     const q = filter.trim().toLowerCase();
-    if (!q) return DIAGRAM_TYPES;
-    return DIAGRAM_TYPES.filter(
+    const all = diagramTypes();
+    if (!q) return all;
+    return all.filter(
       (t) =>
         t.label.toLowerCase().includes(q) ||
         t.description.toLowerCase().includes(q) ||
@@ -100,15 +102,15 @@ export function Gallery({ disabled, onInsert }: Props) {
     <div className={s.root}>
       <Input
         contentBefore={<SearchRegular />}
-        placeholder="Diagrammtyp suchen …"
+        placeholder={tr("searchPlaceholder")}
         value={filter}
         onChange={(_, d) => setFilter(d.value)}
         size="small"
-        aria-label="Diagrammtyp suchen"
+        aria-label={tr("searchLabel")}
       />
-      {renderGroup("Diagramme", "diagram")}
-      {renderGroup("Charts", "chart")}
-      {!filtered.length && <Caption1 className={s.empty}>Kein passender Diagrammtyp gefunden.</Caption1>}
+      {renderGroup(tr("groupDiagrams"), "diagram")}
+      {renderGroup(tr("groupCharts"), "chart")}
+      {!filtered.length && <Caption1 className={s.empty}>{tr("noMatch")}</Caption1>}
     </div>
   );
 }

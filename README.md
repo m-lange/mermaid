@@ -33,6 +33,9 @@ Office Add-in (Taskpane) für **Word, Excel und PowerPoint**, mit dem sich
   im Aufgabenbereich einblenden – dann ändert sich das Dokument erst beim Speichern (Einstellung wird gemerkt).
   Hinweis: Jede Live-Aktualisierung ist in Office ein eigener Rückgängig-Schritt.
 - Liste aller Diagramme im Dokument, inkl. Erkennung verwaister Daten (Element gelöscht)
+- **Zweisprachig (Deutsch/Englisch):** Oberfläche, Beispiele und Code-Bausteine folgen der Office-Anzeigesprache
+  (Deutsch bei deutscher Office-Sprache, sonst Englisch; im Browser-Modus per `?lang=de|en` umschaltbar)
+- Ältere Office-Versionen ohne die nötigen API-Sets erhalten eine klare Meldung statt Fehlfunktionen
 
 ## Schnellstart
 
@@ -54,10 +57,13 @@ Weitere Befehle:
 
 | Befehl | Zweck |
 | --- | --- |
-| `npm run build` | Typprüfung + Produktions-Build nach `dist/` |
+| `npm run build` | Typprüfung + Produktions-Build nach `dist/` inkl. `third-party-notices.txt` |
+| `npm run notices` | Nur die Drittanbieter-Lizenzhinweise erzeugen (`dist/third-party-notices.txt`) |
+| `npm run icons` | Icons (`public/assets/`) und Store-Logo (`store/logo-300.png`) aus `assets/icon.svg` |
+| `npm run screenshots` | Store-Screenshots 1280×720 (de/en) nach `store/screenshots/` (vorher `npm run build`) |
 | `npm run validate` | Manifest prüfen |
 | `npm run test:templates` | Alle Beispielvorlagen und Snippets in Edge (headless) rendern, Syntax-Highlighter prüfen; optional `-- <ordner>` schreibt die PNGs |
-| `THEMES=dark,forest ONLY=pie,flowchart npm run test:templates` | Nur bestimmte Designs/Vorlagen testen |
+| `THEMES=dark,forest ONLY=pie,flowchart LANGS=en npm run test:templates` | Nur bestimmte Designs/Vorlagen/Sprachen testen (Standard: `LANGS=de,en`) |
 | `npm run test:ui` | End-to-End-Test der Taskpane (Browser-Modus, Produktions-Build; vorher `npm run build`) |
 | `npm test` | Build + alle Tests |
 | `CODE_FILES=a.mmd,b.mmd node scripts/test-templates.mjs` | Beliebigen Mermaid-Code testen |
@@ -107,17 +113,22 @@ Verhältnis zur ursprünglichen natürlichen Breite); Position bleibt ebenfalls 
 ### Bildformat
 
 Diagramme werden als hochauflösendes PNG (3-fach) eingefügt. Mermaid wird dafür mit
-`htmlLabels: false` betrieben, damit keine `foreignObject`-Elemente entstehen – diese würden
-weder von Office als SVG noch von Safari (Office für Mac) beim Umwandeln in PNG korrekt
-dargestellt.
+`htmlLabels: false` (und `journey.textPlacement: "tspan"`) betrieben, damit möglichst keine
+`foreignObject`-Elemente entstehen – diese würden weder von Office als SVG noch von Safari
+(Office für Mac) beim Umwandeln in PNG korrekt dargestellt. Erzeugt ein Diagrammtyp trotzdem
+`foreignObject` (z. B. Event Modeling) und verweigert der Browser die Umwandlung, werden diese
+Elemente automatisch durch SVG-Text ersetzt.
 
 ### Voraussetzungen / Requirement Sets
 
 | Anwendung | Erforderlich | Hinweise |
 | --- | --- | --- |
 | Word | WordApi 1.3 (Fallback für Custom XML über gemeinsame API) | WordApi 1.4 empfohlen |
-| Excel | ExcelApi 1.9 (Shapes), 1.5 (Custom XML) | Auswahl-Erkennung eines Diagramms nur mit neueren Versionen; sonst über die Liste bearbeiten |
-| PowerPoint | PowerPointApi 1.5 (Auswahl), 1.7 (Custom XML) | Bild wird über die gemeinsame API eingefügt |
+| Excel | ExcelApi 1.9 (Shapes, Custom XML) | Auswahl-Erkennung eines Diagramms ab ExcelApi 1.19; sonst über die Liste bearbeiten |
+| PowerPoint | PowerPointApi 1.7 (Auswahl, Tags, Custom XML) | ab 1.8 In-place-Aktualisierung (Bildfüllung), sonst über die gemeinsame API (ImageCoercion 1.1) |
+
+Fehlt eine zwingende Voraussetzung, zeigt die Taskpane eine Meldung statt der Oberfläche
+(`missingRequirements()` der Host-Adapter).
 
 ## Projektstruktur
 
@@ -128,9 +139,13 @@ src/taskpane/                React-Oberfläche (Fluent UI v9)
   components/                Galerie, Editor, Dokumentliste
   editor/                    CodeMirror + Mermaid-Syntaxhervorhebung
 src/office/                  Host-Adapter (Word/Excel/PowerPoint/Browser) + Custom-XML-Speicher
-src/shared/templates.ts      Diagrammtypen und Beispielvorlagen
+src/shared/templates.ts      Diagrammtypen und Beispielvorlagen (de), templates.en.ts (en)
+src/shared/snippets.ts       Code-Bausteine (de), snippets.en.ts (en)
+src/shared/strings.ts        Oberflächentexte (de/en), i18n.ts Sprachwahl
 src/shared/render.ts         Mermaid-Rendering, SVG → PNG
-scripts/                     Icon-Generator, Template-Test
+public/                      support.html, privacy.html, terms.html, Icons
+store/                       Store-Texte (listing.md), Logo, Screenshots
+scripts/                     Icons, Manifest für Hosting, Lizenzhinweise, Screenshots, Tests
 ```
 
 ## Deployment
@@ -156,6 +171,21 @@ Microsoft 365 Admin Center verteilen.
 `npm run build` erzeugt statische Dateien in `dist/`. Diese auf einem HTTPS-Webserver ablegen und das
 Manifest mit `ADDIN_BASE_URL=https://server/pfad node scripts/build-manifest.mjs` erzeugen
 (schreibt `dist/manifest.xml`).
+
+## Veröffentlichung im Microsoft Marketplace
+
+Vorbereitet sind:
+
+- Manifest: Herausgeber „Martin Lange“, Name „Mermaid Editor for Word, Excel & PowerPoint“, Support-URL,
+  englischer Standard mit deutschen Overrides
+- Seiten auf GitHub Pages: [support.html](public/support.html), [privacy.html](public/privacy.html),
+  [terms.html](public/terms.html), `third-party-notices.txt`
+- Store-Texte (de/en), Hinweise für die Zertifizierung und Checkliste: [store/listing.md](store/listing.md)
+- Logo `store/logo-300.png`, Screenshots `store/screenshots/` (aus dem Browser-Modus erzeugt –
+  Aufnahmen aus echtem Office sind für den Store-Eintrag noch besser)
+
+Noch offen: Test in Word, Excel und PowerPoint unter Windows, Mac und im Web; rechtliche Prüfung der
+Datenschutz- und Nutzungsbedingungen (ggf. Impressum/Anschrift); Partner-Center-Konto und Einreichung.
 
 ## Lizenz
 

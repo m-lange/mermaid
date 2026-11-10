@@ -1,0 +1,163 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Terms of Use / Nutzungsbedingungen – Mermaid Editor for Word, Excel &amp; PowerPoint</title>
+<meta name="description" content="Terms of use and license (GPL-3.0-only) of the Mermaid Editor add-in for Microsoft Word, Excel and PowerPoint.">
+<link rel="icon" type="image/png" href="assets/icon-32.png">
+<style>
+  :root {
+    color-scheme: light dark;
+    --bg: #ffffff; --fg: #1b1c1f; --muted: #575b63; --border: #d9dce1;
+    --surface: #f4f6f8; --accent: #0f6cbd; --accent-fg: #ffffff;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #151619; --fg: #e9eaed; --muted: #a8adb6; --border: #353840;
+      --surface: #1f2126; --accent: #79b8ff; --accent-fg: #0b0c0e;
+    }
+  }
+  *, *::before, *::after { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    margin: 0; background: var(--bg); color: var(--fg);
+    font: 16px/1.6 system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  }
+  a { color: var(--accent); text-underline-offset: 2px; }
+  a:focus-visible, summary:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; border-radius: 3px; }
+  .skip { position: absolute; left: -9999px; top: 0; background: var(--accent); color: var(--accent-fg); padding: .5rem 1rem; }
+  .skip:focus { left: 1rem; top: 1rem; z-index: 10; }
+  .wrap { max-width: 52rem; margin: 0 auto; padding: 0 1rem; }
+  header.site { border-bottom: 1px solid var(--border); background: var(--surface); }
+  header.site .wrap { display: flex; flex-wrap: wrap; align-items: center; gap: .75rem 1.5rem; padding-top: .9rem; padding-bottom: .9rem; }
+  .brand { display: flex; align-items: center; gap: .6rem; color: var(--fg); text-decoration: none; font-weight: 600; line-height: 1.25; }
+  .brand img { width: 40px; height: 40px; flex: none; }
+  nav.main { display: flex; flex-wrap: wrap; gap: .25rem 1rem; font-size: .95rem; }
+  nav.main a[aria-current="page"] { font-weight: 600; color: var(--fg); text-decoration: none; }
+  .lang { margin-left: auto; font-size: .9rem; color: var(--muted); }
+  .lang a { font-weight: 600; }
+  main { padding: 1.5rem 0 2.5rem; }
+  section[lang] + section[lang] { margin-top: 3rem; padding-top: 2rem; border-top: 2px solid var(--border); }
+  h1 { font-size: 1.75rem; line-height: 1.25; margin: 0 0 .25rem; }
+  h2 { font-size: 1.3rem; margin: 2rem 0 .5rem; }
+  h3 { font-size: 1.05rem; margin: 1.5rem 0 .25rem; }
+  .meta { color: var(--muted); font-size: .9rem; margin: 0 0 1.5rem; }
+  code, kbd { font-family: ui-monospace, "Cascadia Code", Consolas, monospace; font-size: .92em; background: var(--surface); border: 1px solid var(--border); border-radius: 4px; padding: 0 .3em; }
+  .note { background: var(--surface); border-left: 4px solid var(--accent); padding: .75rem 1rem; border-radius: 0 6px 6px 0; }
+  .button { display: inline-block; background: var(--accent); color: var(--accent-fg); text-decoration: none; font-weight: 600; padding: .55rem 1rem; border-radius: 6px; }
+  table { border-collapse: collapse; width: 100%; font-size: .95rem; }
+  th, td { text-align: left; border-bottom: 1px solid var(--border); padding: .4rem .5rem; vertical-align: top; }
+  footer.site { border-top: 1px solid var(--border); background: var(--surface); color: var(--muted); font-size: .88rem; }
+  footer.site .wrap { padding-top: 1.25rem; padding-bottom: 1.5rem; }
+  footer.site nav { display: flex; flex-wrap: wrap; gap: .25rem 1rem; margin-bottom: .75rem; }
+  footer.site p { margin: .35rem 0; }
+  @media (max-width: 36rem) { .lang { margin-left: 0; width: 100%; } h1 { font-size: 1.45rem; } }
+  @media print { header.site nav, .lang, .skip { display: none; } }
+</style>
+</head>
+<body>
+<a class="skip" href="#content">Skip to content / Zum Inhalt</a>
+<header class="site">
+  <div class="wrap">
+    <a class="brand" href="support.html"><img src="assets/icon-64.png" alt="" width="40" height="40"><span>Mermaid Editor<br><small>for Word, Excel &amp; PowerPoint</small></span></a>
+    <nav class="main" aria-label="Pages / Seiten">
+      <a href="support.html">Support</a>
+      <a href="privacy.html">Privacy / Datenschutz</a>
+      <a href="terms.html" aria-current="page">Terms / Nutzungsbedingungen</a>
+    </nav>
+    <p class="lang"><a href="#en" hreflang="en" lang="en">English</a> · <a href="#de" hreflang="de" lang="de">Deutsch</a></p>
+  </div>
+</header>
+
+<main id="content" class="wrap">
+
+<!--
+  NOTE (publisher): These terms summarize the GPL-3.0-only license in plain language and were not
+  written by a lawyer. A legal review is recommended before publishing in the Microsoft Marketplace,
+  in particular regarding the warranty/liability disclaimer under German/EU consumer law (e.g.
+  §§ 309, 444, 521, 524 BGB – liability for intent and gross negligence cannot be fully excluded)
+  and whether a postal address/Impressum must be added.
+-->
+<section id="en" lang="en">
+  <h1>Terms of Use</h1>
+  <p class="meta">Mermaid Editor for Word, Excel &amp; PowerPoint · Last updated: 2026-11-10</p>
+
+  <p>These terms apply to the Office add-in <strong>“Mermaid Editor for Word, Excel &amp; PowerPoint”</strong> (the “add-in”), published by Martin Lange. By installing or using the add-in you agree to these terms.</p>
+
+  <h2>1. License</h2>
+  <p>The add-in is free and open-source software. It is licensed to you under the <strong>GNU General Public License, version 3 only (GPL-3.0-only)</strong>. The full license text is available in the <a href="https://github.com/m-lange/mermaid/blob/main/LICENSE">LICENSE file</a> of the source code repository. You may use the add-in for any purpose, including commercial use, free of charge. You may study, modify and redistribute it under the conditions of the GPL. If these terms and the GPL conflict, the GPL prevails; nothing in these terms restricts the rights the GPL grants you.</p>
+  <p>The complete source code is available at <a href="https://github.com/m-lange/mermaid">github.com/m-lange/mermaid</a>.</p>
+
+  <h2>2. No warranty</h2>
+  <p>The add-in is provided <strong>“as is”</strong>, without warranty of any kind, either expressed or implied, including but not limited to the implied warranties of merchantability and fitness for a particular purpose, to the extent permitted by applicable law. The entire risk as to the quality and performance of the add-in is with you. Should the add-in prove defective, you assume the cost of all necessary servicing, repair or correction (GPL-3.0, section 15).</p>
+
+  <h2>3. Limitation of liability</h2>
+  <p>Unless required by applicable law or agreed to in writing, the author or any other party who modifies and/or conveys the add-in will not be liable to you for damages, including any general, special, incidental or consequential damages arising out of the use or inability to use the add-in (including but not limited to loss of data or data being rendered inaccurate, or losses sustained by you or third parties), even if advised of the possibility of such damages (GPL-3.0, section 16). Where liability cannot be excluded or limited under mandatory law, it is limited to the extent permitted by that law.</p>
+
+  <h2>4. Your documents and content</h2>
+  <p>You remain the owner of your documents and diagrams and are solely responsible for their content and for keeping backups. The add-in inserts and updates images and stores diagram code inside your documents; please check the result and save or back up important documents regularly. Diagrams you create with the add-in are not subject to the GPL.</p>
+
+  <h2>5. Third-party components</h2>
+  <p>The add-in includes third-party open-source components (among others Mermaid, React, Fluent UI, CodeMirror, fflate, DOMPurify and elkjs), each licensed under its own terms. See the <a href="third-party-notices.txt">third-party notices</a> for the list of components and their license texts. Loading the add-in also involves services of GitHub (hosting) and Microsoft (Office, Office.js), whose own terms apply; see the <a href="privacy.html#en">privacy policy</a>.</p>
+
+  <h2>6. Trademarks and independence</h2>
+  <p>Microsoft, Word, Excel, PowerPoint and Office are trademarks of the Microsoft group of companies. “Mermaid” is the name of an independent open-source project (<a href="https://mermaid.js.org">mermaid.js.org</a>). This add-in is an independent project; it is not an official product of the Mermaid project, and it is not affiliated with, sponsored or endorsed by Microsoft or the Mermaid project. All trademarks are used only to describe compatibility.</p>
+
+  <h2>7. Availability and changes</h2>
+  <p>The add-in is offered free of charge. There is no entitlement to availability, support, updates or particular features. The add-in and these terms may change; the current version of the terms is always available on this page.</p>
+
+  <h2>8. Contact</h2>
+  <p>Questions about these terms: <a href="https://github.com/m-lange/mermaid/issues">GitHub Issues</a>.</p>
+</section>
+
+<section id="de" lang="de">
+  <h1>Nutzungsbedingungen</h1>
+  <p class="meta">Mermaid Editor for Word, Excel &amp; PowerPoint · Stand: 10.11.2026</p>
+
+  <p>Diese Bedingungen gelten für das Office-Add-in <strong>„Mermaid Editor for Word, Excel &amp; PowerPoint“</strong> (das „Add-in“), herausgegeben von Martin Lange. Mit der Installation oder Nutzung des Add-ins stimmen Sie diesen Bedingungen zu.</p>
+
+  <h2>1. Lizenz</h2>
+  <p>Das Add-in ist freie Open-Source-Software. Es wird Ihnen unter der <strong>GNU General Public License, ausschließlich Version 3 (GPL-3.0-only)</strong> lizenziert. Der vollständige Lizenztext (englisch) steht in der <a href="https://github.com/m-lange/mermaid/blob/main/LICENSE">LICENSE-Datei</a> des Quellcode-Repositorys. Sie dürfen das Add-in kostenlos für jeden Zweck nutzen, auch kommerziell, und es unter den Bedingungen der GPL untersuchen, verändern und weitergeben. Bei Widersprüchen zwischen diesen Bedingungen und der GPL hat die GPL Vorrang; nichts in diesen Bedingungen schränkt die Rechte ein, die Ihnen die GPL gewährt.</p>
+  <p>Der vollständige Quellcode ist unter <a href="https://github.com/m-lange/mermaid">github.com/m-lange/mermaid</a> verfügbar.</p>
+
+  <h2>2. Keine Gewährleistung</h2>
+  <p>Das Add-in wird <strong>„wie besehen“</strong> („as is“) bereitgestellt, soweit gesetzlich zulässig ohne jegliche ausdrückliche oder stillschweigende Gewährleistung, einschließlich – aber nicht beschränkt auf – der Marktgängigkeit oder Eignung für einen bestimmten Zweck. Das volle Risiko hinsichtlich Qualität und Leistungsfähigkeit des Add-ins liegt bei Ihnen. Sollte sich das Add-in als fehlerhaft erweisen, tragen Sie die Kosten für notwendige Wartung, Reparatur oder Korrektur (GPL-3.0, Abschnitt 15).</p>
+
+  <h2>3. Haftungsbeschränkung</h2>
+  <p>Sofern nicht durch geltendes Recht gefordert oder schriftlich vereinbart, haften der Autor und andere Personen, die das Add-in verändern und/oder weitergeben, Ihnen gegenüber nicht für Schäden, einschließlich allgemeiner, besonderer, zufälliger oder Folgeschäden, die aus der Nutzung oder der Unmöglichkeit der Nutzung des Add-ins entstehen (einschließlich, aber nicht beschränkt auf Datenverlust, fehlerhaft gewordene Daten oder Verluste, die Ihnen oder Dritten entstehen), selbst wenn auf die Möglichkeit solcher Schäden hingewiesen wurde (GPL-3.0, Abschnitt 16). Soweit eine Haftung nach zwingendem Recht nicht ausgeschlossen oder beschränkt werden kann, gilt die Beschränkung nur im gesetzlich zulässigen Umfang.</p>
+
+  <h2>4. Ihre Dokumente und Inhalte</h2>
+  <p>Sie bleiben Eigentümer Ihrer Dokumente und Diagramme und sind allein für deren Inhalt und für Sicherungskopien verantwortlich. Das Add-in fügt Bilder ein, aktualisiert sie und speichert Diagrammcode in Ihren Dokumenten; bitte prüfen Sie das Ergebnis und speichern bzw. sichern Sie wichtige Dokumente regelmäßig. Mit dem Add-in erstellte Diagramme unterliegen nicht der GPL.</p>
+
+  <h2>5. Komponenten Dritter</h2>
+  <p>Das Add-in enthält Open-Source-Komponenten Dritter (u. a. Mermaid, React, Fluent UI, CodeMirror, fflate, DOMPurify und elkjs), die jeweils eigenen Lizenzbedingungen unterliegen. Die Liste der Komponenten und ihre Lizenztexte finden Sie in den <a href="third-party-notices.txt">Hinweisen zu Drittanbieter-Software</a>. Beim Laden des Add-ins werden außerdem Dienste von GitHub (Hosting) und Microsoft (Office, Office.js) genutzt, für die deren eigene Bedingungen gelten; siehe <a href="privacy.html#de">Datenschutzerklärung</a>.</p>
+
+  <h2>6. Marken und Unabhängigkeit</h2>
+  <p>Microsoft, Word, Excel, PowerPoint und Office sind Marken der Microsoft-Unternehmensgruppe. „Mermaid“ ist der Name eines unabhängigen Open-Source-Projekts (<a href="https://mermaid.js.org">mermaid.js.org</a>). Dieses Add-in ist ein unabhängiges Projekt; es ist kein offizielles Produkt des Mermaid-Projekts und steht in keiner Verbindung zu Microsoft oder dem Mermaid-Projekt und wird von diesen weder gesponsert noch unterstützt. Alle Marken werden nur zur Beschreibung der Kompatibilität verwendet.</p>
+
+  <h2>7. Verfügbarkeit und Änderungen</h2>
+  <p>Das Add-in wird kostenlos angeboten. Es besteht kein Anspruch auf Verfügbarkeit, Support, Updates oder bestimmte Funktionen. Das Add-in und diese Bedingungen können sich ändern; die aktuelle Fassung der Bedingungen ist stets auf dieser Seite abrufbar.</p>
+
+  <h2>8. Kontakt</h2>
+  <p>Fragen zu diesen Bedingungen: <a href="https://github.com/m-lange/mermaid/issues">GitHub Issues</a>.</p>
+</section>
+
+</main>
+
+<footer class="site">
+  <div class="wrap">
+    <nav aria-label="Footer">
+      <a href="support.html">Support</a>
+      <a href="privacy.html">Privacy / Datenschutz</a>
+      <a href="terms.html">Terms / Nutzungsbedingungen</a>
+      <a href="https://github.com/m-lange/mermaid">GitHub</a>
+      <a href="https://github.com/m-lange/mermaid/blob/main/LICENSE">License (GPL-3.0-only)</a>
+      <a href="third-party-notices.txt">Third-party notices</a>
+    </nav>
+    <p>© 2026 Martin Lange. Mermaid Editor for Word, Excel &amp; PowerPoint is free software licensed under GPL-3.0-only.</p>
+    <p>Microsoft, Word, Excel, PowerPoint and Office are trademarks of the Microsoft group of companies. “Mermaid” is the name of an independent open-source project. This add-in is not affiliated with, sponsored or endorsed by Microsoft or the Mermaid project.</p>
+  </div>
+</footer>
+</body>
+</html>

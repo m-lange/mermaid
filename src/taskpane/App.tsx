@@ -25,6 +25,7 @@ import { completeTheme, themeFingerprint, type DocumentTheme } from "../shared/d
 import { Gallery } from "./components/Gallery";
 import type { EditorSession, LiveResult, PreviewMode } from "./components/DiagramEditor";
 import { DocumentList, type ListEntry } from "./components/DocumentList";
+import { tr } from "../shared/strings";
 
 const PREVIEW_KEY = "mermaid.previewMode";
 
@@ -91,6 +92,8 @@ export function App({ adapter, dark }: Props) {
   const toasterId = useId("toaster");
   const { dispatchToast } = useToastController(toasterId);
 
+  /** Fehlende Mindestanforderungen der Office-Version (einmalig ermittelt) */
+  const [missingRequirements] = useState<string[]>(() => adapter.missingRequirements?.() ?? []);
   const [session, setSession] = useState<EditorSession | null>(null);
   const [busy, setBusy] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
@@ -221,7 +224,7 @@ export function App({ adapter, dark }: Props) {
       setEntries(list);
     } catch (e) {
       console.error(e);
-      setError(`Diagrammliste konnte nicht geladen werden: ${formatError(e)}`);
+      setError(tr("listFailed", { error: formatError(e) }));
     } finally {
       setListLoading(false);
     }
@@ -244,8 +247,8 @@ export function App({ adapter, dark }: Props) {
       startSession({
         isNew: false,
         notice: recovered
-          ? "Für dieses Diagramm wurden keine gespeicherten Daten gefunden. Der Code wurde aus dem Alternativtext wiederhergestellt – bitte speichern."
-          : "Für dieses Diagramm wurden keine gespeicherten Daten gefunden. Speichern ersetzt das Bild durch den Code im Editor.",
+          ? tr("noDataRecovered")
+          : tr("noData"),
         record: {
           id,
           type: type?.id ?? "flowchart",
@@ -339,7 +342,7 @@ export function App({ adapter, dark }: Props) {
         return { ok: false, kind: "syntax", error: formatError(e) };
       }
       const type = detectDiagramType(code);
-      const label = type?.label ?? getDiagramType(current.record.type)?.label ?? "Diagramm";
+      const label = type?.label ?? getDiagramType(current.record.type)?.label ?? tr("diagramFallback");
       const record: DiagramRecord = {
         ...current.record,
         ...options,
@@ -384,7 +387,7 @@ export function App({ adapter, dark }: Props) {
 
   const insertDiagram = async (type: DiagramTypeDef) => {
     setError(null);
-    setBusy(`${type.label} wird eingefügt …`);
+    setBusy(tr("inserting", { label: type.label }));
     try {
       await themeReadyRef.current;
       const now = new Date().toISOString();
@@ -406,10 +409,10 @@ export function App({ adapter, dark }: Props) {
       });
       dirtyRef.current = false;
       startSession({ record, isNew: true });
-      notify(`${type.label} eingefügt`);
+      notify(tr("inserted", { label: type.label }));
     } catch (e) {
       console.error(e);
-      setError(`Einfügen fehlgeschlagen: ${formatError(e)}`);
+      setError(tr("insertFailed", { error: formatError(e) }));
     } finally {
       setBusy(null);
     }
@@ -434,7 +437,7 @@ export function App({ adapter, dark }: Props) {
         code,
         modified: new Date().toISOString(),
       };
-      const label = type?.label ?? getDiagramType(base.type)?.label ?? "Diagramm";
+      const label = type?.label ?? getDiagramType(base.type)?.label ?? tr("diagramFallback");
       if (key !== doc.key || doc.count === 0) {
         // Dokument zeigt diesen Stand noch nicht (z. B. Vorschau im Aufgabenbereich) -> jetzt aktualisieren
         const img = await renderDiagram(code, options);
@@ -453,11 +456,11 @@ export function App({ adapter, dark }: Props) {
       setSelectionChangedWhileDirty(false);
       startSession({ record, isNew: false });
       docStateRef.current.count = updated;
-      notify(updated > 1 ? `Gespeichert (${updated} Elemente aktualisiert)` : updated === 0 ? "Code gespeichert – kein Element im Dokument gefunden" : "Gespeichert", updated === 0 ? "warning" : "success");
+      notify(updated > 1 ? tr("savedMany", { n: updated }) : updated === 0 ? tr("savedNoElement") : tr("saved"), updated === 0 ? "warning" : "success");
       void refreshList();
     } catch (e) {
       console.error(e);
-      setError(`Speichern fehlgeschlagen: ${formatError(e)}`);
+      setError(tr("saveFailed", { error: formatError(e) }));
     } finally {
       setSaving(false);
     }
@@ -471,7 +474,7 @@ export function App({ adapter, dark }: Props) {
     // Dokument auf den gespeicherten Stand zurücksetzen – über dieselbe Warteschlange wie die Live-Vorschau,
     // damit ein noch laufendes Update nicht nachträglich den verworfenen Stand schreibt
     void liveUpdate(current.record.code, current.record, true).then((r) => {
-      if (!r.ok) setError(`Dokument konnte nicht zurückgesetzt werden: ${r.error}`);
+      if (!r.ok) setError(tr("resetFailed", { error: r.error }));
     });
     dirtyRef.current = false;
     setSelectionChangedWhileDirty(false);
@@ -488,10 +491,10 @@ export function App({ adapter, dark }: Props) {
   const deleteRecord = async (id: string) => {
     try {
       await adapter.store.remove(id);
-      notify("Diagrammdaten gelöscht", "info");
+      notify(tr("dataDeleted"), "info");
       void refreshList();
     } catch (e) {
-      setError(`Löschen fehlgeschlagen: ${formatError(e)}`);
+      setError(tr("deleteFailed", { error: formatError(e) }));
     }
   };
 
@@ -502,6 +505,17 @@ export function App({ adapter, dark }: Props) {
   // ------------------------------------------------------------ Render
   const browser = adapter instanceof BrowserAdapter ? adapter : null;
 
+  // Zu alte Office-Version: klare Meldung statt Fehlfunktionen
+  if (missingRequirements.length > 0) {
+    return (
+      <div className={s.app}>
+        <MessageBar intent="error" layout="multiline" style={{ margin: "14px" }}>
+          <MessageBarBody>{tr("unsupported", { host: adapter.kind, details: missingRequirements.join(", ") })}</MessageBarBody>
+        </MessageBar>
+      </div>
+    );
+  }
+
   return (
     <div className={s.app}>
       <Toaster toasterId={toasterId} position="top-end" />
@@ -509,13 +523,13 @@ export function App({ adapter, dark }: Props) {
       {error && (
         <MessageBar intent="error" layout="multiline" style={{ margin: "8px 14px 0" }}>
           <MessageBarBody>{error}</MessageBarBody>
-          <MessageBarActions containerAction={<Button appearance="transparent" icon={<DismissRegular />} onClick={() => setError(null)} aria-label="Schließen" />} />
+          <MessageBarActions containerAction={<Button appearance="transparent" icon={<DismissRegular />} onClick={() => setError(null)} aria-label={tr("close")} />} />
         </MessageBar>
       )}
 
       {session ? (
         <div className={s.editorContent}>
-          <Suspense fallback={<Spinner label="Editor wird geladen …" />}>
+          <Suspense fallback={<Spinner label={tr("editorLoading")} />}>
           <DiagramEditor
             session={session}
             dark={dark}
@@ -548,7 +562,7 @@ export function App({ adapter, dark }: Props) {
           <Gallery disabled={!!busy} onInsert={insertDiagram} />
           {browser && entries && entries.some((e) => e.occurrences > 0) && (
             <div className={s.browserDoc}>
-              <Caption1>Simuliertes Dokument (Klick = Auswahl):</Caption1>
+              <Caption1>{tr("simulatedDocument")}</Caption1>
               {entries
                 .filter((e) => e.occurrences > 0)
                 .map((e) => (

@@ -3,6 +3,7 @@ import { FluentProvider, webDarkTheme, webLightTheme } from "@fluentui/react-com
 import { App } from "./App";
 import type { HostAdapter } from "../office/hostAdapter";
 import { BrowserAdapter } from "../office/browserAdapter";
+import { setLanguage } from "../shared/i18n";
 import "./styles.css";
 
 async function createAdapter(host: Office.HostType | null | undefined): Promise<HostAdapter> {
@@ -38,7 +39,21 @@ function isDarkOfficeTheme(): boolean {
   return window.matchMedia?.("(prefers-color-scheme: dark)").matches ?? false;
 }
 
+/** Oberflächensprache: Office-Anzeigesprache, im Browser-Modus die Browsersprache (?lang=de|en überschreibt) */
+function initLanguage() {
+  let code: string | undefined;
+  try {
+    code = Office.context?.displayLanguage;
+  } catch {
+    /* außerhalb von Office */
+  }
+  const override = new URLSearchParams(location.search).get("lang");
+  const lang = setLanguage(override || code || navigator.language);
+  document.documentElement.lang = lang;
+}
+
 function render(adapter: HostAdapter) {
+  initLanguage();
   // Nur im Browser-Modus: simuliertes Dokument für automatisierte Tests erreichbar machen
   if (adapter instanceof BrowserAdapter) (window as unknown as { mermaidBrowserDoc: BrowserAdapter }).mermaidBrowserDoc = adapter;
   const root = createRoot(document.getElementById("root")!);

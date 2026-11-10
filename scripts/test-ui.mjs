@@ -15,7 +15,7 @@ const server = await preview({
   logLevel: "error",
 });
 
-const url = `${server.resolvedUrls.local[0]}taskpane/taskpane.html`;
+const url = `${server.resolvedUrls.local[0]}taskpane/taskpane.html?lang=de`;
 const browser = await chromium.launch({ channel: "msedge", headless: true });
 const errors = [];
 const results = {};

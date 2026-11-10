@@ -1,4 +1,15 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
-  <rect width="64" height="64" rx="14" fill="#FF3670"/>
-  <path d="M13 16c9 0 15.5 4 19 13 3.5-9 10-13 19-13-1 10-4.5 16.5-11.5 20.5-1.4.8-2.3 2.3-2.3 3.9V48h-10.4v-7.6c0-1.6-.9-3.1-2.3-3.9C17.5 32.5 14 26 13 16z" fill="#fff"/>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#1A9AA0"/>
+      <stop offset="1" stop-color="#0B5C70"/>
+    </linearGradient>
+  </defs>
+  <rect width="64" height="64" rx="14" fill="url(#bg)"/>
+  <!-- Verbindungen -->
+  <path d="M32 24v7M18 31h28M18 31v8M46 31v8" fill="none" stroke="#FFFFFF" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- Knoten -->
+  <rect x="20" y="11" width="24" height="13" rx="3.5" fill="#FFFFFF"/>
+  <rect x="6" y="39" width="24" height="13" rx="3.5" fill="#FFFFFF"/>
+  <rect x="34" y="39" width="24" height="13" rx="6.5" fill="#FFC857"/>
 </svg>

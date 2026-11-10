@@ -31,6 +31,7 @@ import { CodeEditor, type CodeEditorHandle } from "../editor/CodeEditor";
 import { themeFingerprint, type DocumentTheme } from "../../shared/docTheme";
 import { EditorToolbar } from "./EditorToolbar";
 import { iconFor } from "../icons";
+import { tr } from "../../shared/strings";
 
 const useStyles = makeStyles({
   root: { display: "flex", flexDirection: "column", height: "100%", minHeight: 0, gap: "8px" },
@@ -235,22 +236,22 @@ export function DiagramEditor({
   return (
     <div className={s.root}>
       <div className={s.header}>
-        <Tooltip content={dirty ? "Erst speichern oder abbrechen" : "Zur Übersicht"} relationship="label">
+        <Tooltip content={dirty ? tr("backDirty") : tr("back")} relationship="label">
           <Button appearance="subtle" icon={<ArrowLeftRegular />} onClick={onBack} disabled={dirty || saving} />
         </Tooltip>
         <div className={s.headerTitle}>
           <Icon className={s.headerIcon} />
           <Subtitle2 truncate wrap={false}>
-            {type?.label ?? "Mermaid-Diagramm"}
+            {type?.label ?? tr("diagramFallback")}
           </Subtitle2>
         </div>
         {type && (
-          <Tooltip content="Syntax-Dokumentation öffnen" relationship="label">
+          <Tooltip content={tr("openDocs")} relationship="label">
             <Button as="a" href={type.docs} target="_blank" rel="noreferrer" appearance="subtle" icon={<BookOpenRegular />} />
           </Tooltip>
         )}
         <Tooltip
-          content={previewMode === "document" ? "Vorschau im Aufgabenbereich anzeigen (Dokument erst beim Speichern ändern)" : "Live-Vorschau im Dokument"}
+          content={previewMode === "document" ? tr("showPanePreview") : tr("showDocPreview")}
           relationship="label"
         >
           <ToggleButton
@@ -261,7 +262,7 @@ export function DiagramEditor({
             data-testid="preview-toggle"
           />
         </Tooltip>
-        <Tooltip content="Beispielcode wiederherstellen" relationship="label">
+        <Tooltip content={tr("resetExample")} relationship="label">
           <Button appearance="subtle" icon={<ArrowResetRegular />} onClick={resetToTemplate} disabled={saving} />
         </Tooltip>
       </div>
@@ -273,10 +274,10 @@ export function DiagramEditor({
       )}
       {themeOutdated && (
         <MessageBar className={s.bar} intent="info" layout="multiline">
-          <MessageBarBody>Das Dokumentdesign hat sich geändert. Dieses Diagramm verwendet noch die bisherigen Farben/Schriftart.</MessageBarBody>
+          <MessageBarBody>{tr("themeChanged")}</MessageBarBody>
           <MessageBarActions>
             <Button size="small" onClick={() => onSave(code, options)} disabled={saving}>
-              Aktualisieren
+              {tr("update")}
             </Button>
           </MessageBarActions>
         </MessageBar>
@@ -284,7 +285,7 @@ export function DiagramEditor({
       {selectionChangedWhileDirty && (
         <MessageBar className={s.bar} intent="info">
           <MessageBarBody>
-            Die Auswahl im Dokument hat sich geändert. Speichern oder verwerfen Sie zuerst die Änderungen an diesem Diagramm.
+            {tr("selectionChanged")}
           </MessageBarBody>
         </MessageBar>
       )}
@@ -305,21 +306,21 @@ export function DiagramEditor({
       {officeError && (
         <MessageBar className={s.bar} intent="warning" layout="multiline">
           <MessageBarBody>
-            <MessageBarTitle>Dokument konnte nicht aktualisiert werden</MessageBarTitle>
+            <MessageBarTitle>{tr("docUpdateFailed")}</MessageBarTitle>
             {officeError}
           </MessageBarBody>
         </MessageBar>
       )}
       {docMissing && previewMode === "document" && (
         <MessageBar className={s.bar} intent="info">
-          <MessageBarBody>Das Diagramm wurde im Dokument nicht gefunden – die Vorschau wird hier angezeigt.</MessageBarBody>
+          <MessageBarBody>{tr("docMissing")}</MessageBarBody>
         </MessageBar>
       )}
 
       {error && (
         <MessageBar className={s.bar} intent="error" layout="multiline">
           <MessageBarBody>
-            <MessageBarTitle>Syntaxfehler</MessageBarTitle>
+            <MessageBarTitle>{tr("syntaxError")}</MessageBarTitle>
             <div className={s.error}>{error}</div>
           </MessageBarBody>
         </MessageBar>
@@ -329,7 +330,7 @@ export function DiagramEditor({
       <div
         className={mergeClasses(s.previewBox, previewBg)}
         style={options.theme === "document" && options.background === "theme" ? { backgroundColor: docTheme.lt1, backgroundImage: "none" } : undefined}
-        aria-label="Vorschau"
+        aria-label={tr("preview")}
       >
         {rendering && <Spinner className={s.spinner} size="tiny" />}
         <div
@@ -337,7 +338,7 @@ export function DiagramEditor({
           dangerouslySetInnerHTML={{ __html: svg }}
         />
         <div className={s.previewToolbar}>
-          <Tooltip content={fit ? "Originalgröße" : "An Breite anpassen"} relationship="label">
+          <Tooltip content={fit ? tr("originalSize") : tr("fitWidth")} relationship="label">
             <ToggleButton size="small" appearance="subtle" checked={!fit} icon={<ZoomFitRegular />} onClick={() => setFit(!fit)} />
           </Tooltip>
         </div>
@@ -349,14 +350,14 @@ export function DiagramEditor({
           {rendering && previewMode === "document" && !showPane ? (
             <>
               <Spinner size="extra-tiny" style={{ display: "inline-flex", verticalAlign: "middle", marginRight: 4 }} />
-              Dokument wird aktualisiert …
+              {tr("updatingDocument")}
             </>
           ) : session.isNew && !dirty ? (
-            "Eingefügt"
+            tr("statusInserted")
           ) : dirty ? (
-            previewMode === "document" && !showPane ? "Live im Dokument – nicht gespeichert" : "Ungespeicherte Änderungen"
+            previewMode === "document" && !showPane ? tr("statusLiveUnsaved") : tr("statusUnsaved")
           ) : (
-            "Gespeichert"
+            tr("statusSaved")
           )}
         </Caption1>
         <div className={s.grow} />
@@ -364,9 +365,9 @@ export function DiagramEditor({
           icon={<DismissRegular />}
           onClick={onCancel}
           disabled={!dirty || saving}
-          title={previewMode === "document" ? "Änderungen verwerfen und Dokument zurücksetzen" : "Änderungen verwerfen"}
+          title={previewMode === "document" ? tr("cancelDocTitle") : tr("cancelTitle")}
         >
-          Abbrechen
+          {tr("cancel")}
         </Button>
         <Button
           appearance="primary"
@@ -374,7 +375,7 @@ export function DiagramEditor({
           onClick={() => onSave(code, options)}
           disabled={!dirty || !!error || saving || rendering}
         >
-          Speichern
+          {tr("save")}
         </Button>
       </div>
     </div>

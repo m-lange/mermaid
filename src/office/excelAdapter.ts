@@ -6,11 +6,13 @@ import {
   idFromShapeName,
   initialSizePt,
   isSetSupported,
+  missingSets,
   shapeNameFor,
   updatedSizePt,
   type DocumentDiagramElement,
   type HostAdapter,
 } from "./hostAdapter";
+import { tr } from "../shared/strings";
 
 const MAX_W = 720;
 const MAX_H = 540;
@@ -24,6 +26,11 @@ export class ExcelAdapter implements HostAdapter {
   readonly store: DiagramStore;
   /** Excel liefert die Shape-Auswahl erst mit neueren API-Versionen */
   readonly supportsSelectionDetection: boolean;
+
+  /** Shapes (addImage) und Custom XML Parts */
+  missingRequirements() {
+    return missingSets([["ExcelApi", "1.9"]]);
+  }
 
   constructor() {
     const run: XmlRunner = (fn) => Excel.run((ctx) => fn(ctx.workbook.customXmlParts as never, ctx));
@@ -171,6 +178,6 @@ function hasActiveShapeApi(): boolean {
 }
 
 function applyAltText(shape: Excel.Shape, record: DiagramRecord, typeLabel: string) {
-  shape.altTextTitle = `Mermaid-Diagramm: ${typeLabel}`;
+  shape.altTextTitle = tr("altTitle", { label: typeLabel });
   shape.altTextDescription = record.code.length > 4000 ? record.code.substring(0, 4000) + " …" : record.code;
 }

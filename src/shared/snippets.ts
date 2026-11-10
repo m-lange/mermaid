@@ -9,15 +9,10 @@
  * Beispielvorlage seines Typs angehängt und gerendert – so bleibt die Syntax gültig.
  */
 
-export type SnippetGroup = "nodes" | "edges" | "structure" | "style" | "general";
+import { getLanguage } from "./i18n";
+import { EN_SNIPPETS } from "./snippets.en";
 
-export const SNIPPET_GROUPS: { id: SnippetGroup; label: string; title: string }[] = [
-  { id: "nodes", label: "Elemente", title: "Knoten und Elemente einfügen" },
-  { id: "edges", label: "Kanten", title: "Verbindungen und Pfeile einfügen" },
-  { id: "structure", label: "Struktur", title: "Gruppen, Blöcke und Notizen einfügen" },
-  { id: "style", label: "Stil", title: "Farben, Klassen und Stile einfügen" },
-  { id: "general", label: "Mehr", title: "Kommentare und Konfiguration (Frontmatter)" },
-];
+export type SnippetGroup = "nodes" | "edges" | "structure" | "style" | "general";
 
 export interface Snippet {
   label: string;
@@ -433,7 +428,19 @@ const SNIPPETS: Record<string, Snippet[]> = {
 };
 
 export function snippetsFor(typeId: string | undefined): Snippet[] {
-  return [...((typeId && SNIPPETS[typeId]) || []), ...COMMON_SNIPPETS];
+  const list = [...((typeId && SNIPPETS[typeId]) || []), ...COMMON_SNIPPETS];
+  return getLanguage() === "de" ? list : list.map((sn) => localizeSnippet(sn, typeId));
+}
+
+/** Englische Fassung eines Snippets (Label + Platzhalter), siehe snippets.en.ts */
+function localizeSnippet(sn: Snippet, typeId: string | undefined): Snippet {
+  const full = typeId ? EN_SNIPPETS.byType[typeId]?.[sn.label] : undefined;
+  const code =
+    full ??
+    sn.code.replace(/#\{([^}]*)\}/g, (m, value: string) =>
+      value in EN_SNIPPETS.placeholders ? `#{${EN_SNIPPETS.placeholders[value]}}` : m,
+    );
+  return { ...sn, label: EN_SNIPPETS.labels[sn.label] ?? sn.label, code };
 }
 
 /**

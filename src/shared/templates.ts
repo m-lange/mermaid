@@ -5,6 +5,8 @@
  */
 
 import { V12_DIAGRAM_TYPES } from "./templatesV12";
+import { EN_TEMPLATES } from "./templates.en";
+import { getLanguage } from "./i18n";
 
 export type DiagramCategory = "diagram" | "chart";
 
@@ -599,8 +601,21 @@ classDef wichtig fill:#ffcc80,stroke:#e65100,stroke-width:2px
 /** Alle Diagrammtypen: klassische + neu in Mermaid 12 */
 export const DIAGRAM_TYPES: DiagramTypeDef[] = [...BASE_DIAGRAM_TYPES, ...V12_DIAGRAM_TYPES];
 
+/** Liefert den Diagrammtyp in der aktuellen Sprache (Label, Beschreibung, Beispielcode) */
+export function localizeType(t: DiagramTypeDef): DiagramTypeDef {
+  if (getLanguage() === "de") return t;
+  const en = EN_TEMPLATES[t.id];
+  return en ? { ...t, ...en } : t;
+}
+
+/** Alle Diagrammtypen in der aktuellen Sprache */
+export function diagramTypes(): DiagramTypeDef[] {
+  return DIAGRAM_TYPES.map(localizeType);
+}
+
 export function getDiagramType(id: string | undefined): DiagramTypeDef | undefined {
-  return DIAGRAM_TYPES.find((t) => t.id === id);
+  const t = DIAGRAM_TYPES.find((x) => x.id === id);
+  return t && localizeType(t);
 }
 
 /** Ermittelt den Diagrammtyp aus dem Code (Frontmatter & Kommentare werden übersprungen). */
@@ -612,5 +627,6 @@ export function detectDiagramType(code: string): DiagramTypeDef | undefined {
     .filter((l) => l && !l.startsWith("%%"));
   const first = body[0]?.split(/\s+/)[0];
   if (!first) return undefined;
-  return DIAGRAM_TYPES.find((t) => t.keywords.includes(first));
+  const t = DIAGRAM_TYPES.find((x) => x.keywords.includes(first));
+  return t && localizeType(t);
 }

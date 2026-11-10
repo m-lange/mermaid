@@ -2,6 +2,7 @@ import type { DiagramRecord, RenderedDiagram } from "../shared/model";
 import type { DocumentTheme } from "../shared/docTheme";
 import { MemoryDiagramStore } from "./customXmlStore";
 import type { DocumentDiagramElement, HostAdapter } from "./hostAdapter";
+import { tr } from "../shared/strings";
 
 /**
  * Simuliert ein Dokument im Browser (ohne Office), damit die Oberfläche
@@ -42,7 +43,7 @@ export class BrowserAdapter implements HostAdapter {
   }
 
   async listDocumentDiagrams(): Promise<DocumentDiagramElement[]> {
-    return this.elements.map((e, i) => ({ id: e.id, location: `Element ${i + 1}` }));
+    return this.elements.map((e, i) => ({ id: e.id, location: tr("elementN", { n: i + 1 }) }));
   }
 
   async selectDiagram(id: string) {

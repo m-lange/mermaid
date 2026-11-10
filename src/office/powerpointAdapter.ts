@@ -9,11 +9,13 @@ import {
   idFromShapeName,
   initialSizePt,
   isSetSupported,
+  missingSets,
   shapeNameFor,
   updatedSizePt,
   type DocumentDiagramElement,
   type HostAdapter,
 } from "./hostAdapter";
+import { tr } from "../shared/strings";
 
 /** Maximalgröße beim Einfügen (16:9-Folie = 960 × 540 pt) */
 const MAX_W = 860;
@@ -40,6 +42,13 @@ interface FoundShape {
 export class PowerPointAdapter implements HostAdapter {
   readonly kind = "PowerPoint" as const;
   readonly supportsSelectionDetection = isSetSupported("PowerPointApi", "1.5");
+
+  /** Custom XML Parts (1.7) und Bild einfügen (1.8 oder gemeinsame API) */
+  missingRequirements() {
+    const missing = missingSets([["PowerPointApi", "1.7"]]);
+    if (!isSetSupported("PowerPointApi", "1.8") && !isSetSupported("ImageCoercion", "1.1")) missing.push("ImageCoercion 1.1");
+    return missing;
+  }
   readonly store: DiagramStore;
   private readonly fillMode = isSetSupported("PowerPointApi", "1.8");
 
@@ -47,7 +56,7 @@ export class PowerPointAdapter implements HostAdapter {
     const run: XmlRunner = (fn) => {
       if (!isSetSupported("PowerPointApi", "1.7")) {
         return Promise.reject(
-          new Error("Diese PowerPoint-Version unterstützt keine Custom XML Parts (PowerPointApi 1.7 erforderlich)."),
+          new Error(tr("pptNoCustomXml")),
         );
       }
       return PowerPoint.run((ctx) => fn(ctx.presentation.customXmlParts as never, ctx));
@@ -110,7 +119,7 @@ export class PowerPointAdapter implements HostAdapter {
     shape.tags.add(PPT_TAG_KEY, record.id);
     shape.name = shapeNameFor(record.id);
     if (isSetSupported("PowerPointApi", "1.10")) {
-      shape.altTextTitle = `Mermaid-Diagramm: ${typeLabel}`;
+      shape.altTextTitle = tr("altTitle", { label: typeLabel });
       shape.altTextDescription = truncate(record.code);
     }
   }
@@ -125,7 +134,7 @@ export class PowerPointAdapter implements HostAdapter {
         slides.load("items/id");
         await ctx.sync();
         const slide = slides.items[0];
-        if (!slide) throw new Error("Bitte zuerst eine Folie auswählen.");
+        if (!slide) throw new Error(tr("selectSlideFirst"));
         const shape = slide.shapes.addGeometricShape(PowerPoint.GeometricShapeType.rectangle, {
           left: (SLIDE_W - size.width) / 2,
           top: (SLIDE_H - size.height) / 2,
@@ -167,7 +176,7 @@ export class PowerPointAdapter implements HostAdapter {
       slides.load("items/id");
       await ctx.sync();
       const slide = slides.items[0];
-      if (!slide) throw new Error("Bitte zuerst eine Folie auswählen.");
+      if (!slide) throw new Error(tr("selectSlideFirst"));
       const shapes = slide.shapes;
       shapes.load("items/id");
       await ctx.sync();
@@ -183,7 +192,7 @@ export class PowerPointAdapter implements HostAdapter {
       await ctx.sync();
       const added = shapes.items.filter((s) => !before.ids.has(s.id));
       const shape = added[added.length - 1];
-      if (!shape) throw new Error("Das eingefügte Bild wurde nicht gefunden.");
+      if (!shape) throw new Error(tr("insertedImageNotFound"));
       this.markShape(shape, record, typeLabel);
       slide.setSelectedShapes([shape.id]);
       await ctx.sync();
@@ -241,7 +250,7 @@ export class PowerPointAdapter implements HostAdapter {
   listDocumentDiagrams(): Promise<DocumentDiagramElement[]> {
     return PowerPoint.run(async (ctx) => {
       const found = await this.findShapes(ctx);
-      return found.map((f) => ({ id: f.diagramId, location: `Folie ${f.slideIndex + 1}` }));
+      return found.map((f) => ({ id: f.diagramId, location: tr("slideN", { n: f.slideIndex + 1 }) }));
     });
   }
 

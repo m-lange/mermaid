@@ -8,22 +8,31 @@
     <!-- Wird nur von scripts/test-templates.mjs verwendet (nicht Teil des Builds) -->
     <div id="out"></div>
     <script type="module">
-      import { DIAGRAM_TYPES } from "../shared/templates.ts";
+      import { DIAGRAM_TYPES, diagramTypes } from "../shared/templates.ts";
+      import { EN_TEMPLATES } from "../shared/templates.en.ts";
       import { renderDiagram, renderSvg, formatError } from "../shared/render.ts";
       import { snippetsFor, frontmatterEdit, expandSnippet } from "../shared/snippets.ts";
+      import { EN_SNIPPETS } from "../shared/snippets.en.ts";
+      import { setLanguage, getLanguage } from "../shared/i18n.ts";
       import { DEFAULT_OPTIONS } from "../shared/model.ts";
 
-      window.runAll = async (themes = ["default"], only = null) => {
+      // Sprache setzen und die Diagrammtypen in dieser Sprache liefern (Label, Beschreibung, Vorlage)
+      const typesFor = (lang, only = null) => {
+        if (lang) setLanguage(lang);
+        return diagramTypes().filter((x) => !only || only.includes(x.id));
+      };
+
+      window.runAll = async (themes = ["default"], only = null, lang = "de") => {
         const results = [];
         for (const theme of themes) {
-          for (const t of DIAGRAM_TYPES.filter((x) => !only || only.includes(x.id))) {
+          for (const t of typesFor(lang, only)) {
             const started = performance.now();
             try {
               const r = await renderDiagram(t.template, { ...DEFAULT_OPTIONS, theme }, 1.5);
               const hasForeignObject = r.svg.includes("<foreignObject");
-              results.push({ id: t.id, theme, ok: true, w: Math.round(r.widthPx), h: Math.round(r.heightPx), ms: Math.round(performance.now() - started), foreignObject: hasForeignObject, png: r.pngBase64 });
+              results.push({ id: t.id, theme, lang, ok: true, w: Math.round(r.widthPx), h: Math.round(r.heightPx), ms: Math.round(performance.now() - started), foreignObject: hasForeignObject, png: r.pngBase64 });
             } catch (e) {
-              results.push({ id: t.id, theme, ok: false, error: formatError(e) });
+              results.push({ id: t.id, theme, lang, ok: false, error: formatError(e) });
             }
           }
         }
@@ -37,10 +46,11 @@
           return { id: "code", theme: "default", ok: false, error: formatError(e) };
         }
       };
-      // Jedes Snippet an die Vorlage seines Typs anhängen (bzw. in den Frontmatter einfügen) und rendern
-      window.runSnippets = async (only = null) => {
+      // Jedes Snippet an die Vorlage seines Typs anhängen (bzw. in den Frontmatter einfügen) und rendern.
+      // Vorlage und Snippets stammen jeweils aus derselben Sprache.
+      window.runSnippets = async (only = null, lang = "de") => {
         const results = [];
-        for (const t of DIAGRAM_TYPES.filter((x) => !only || only.includes(x.id))) {
+        for (const t of typesFor(lang, only)) {
           const lines = t.template.trimEnd().split("\n");
           const last = [...lines].reverse().find((l) => l.trim()) ?? "";
           const baseIndent = /^\s*/.exec(last)[0];
@@ -59,19 +69,68 @@
             }
             try {
               await renderSvg(code, DEFAULT_OPTIONS);
-              results.push({ id: t.id, label: sn.label, ok: true });
+              results.push({ id: t.id, lang, label: sn.label, ok: true });
             } catch (e) {
-              results.push({ id: t.id, label: sn.label, ok: false, error: formatError(e), code });
+              results.push({ id: t.id, lang, label: sn.label, ok: false, error: formatError(e), code });
             }
           }
         }
         return results;
       };
+      // Vollständigkeit der englischen Fassung: jede Vorlage in EN_TEMPLATES, jedes deutsche
+      // Snippet-Label in EN_SNIPPETS.labels, keine Umlaute und keine unübersetzten Platzhalter.
+      window.runI18nCheck = async () => {
+        const prev = getLanguage();
+        const errors = [];
+        const umlaut = /[äöüÄÖÜß]/;
+        const isType = (id) => DIAGRAM_TYPES.some((t) => t.id === id);
+        for (const t of DIAGRAM_TYPES) {
+          const en = EN_TEMPLATES[t.id];
+          if (!en) {
+            errors.push({ id: t.id, error: "fehlt in EN_TEMPLATES" });
+            continue;
+          }
+          for (const key of ["label", "description", "template"]) {
+            const line = en[key].split("\n").find((l) => umlaut.test(l));
+            if (line) errors.push({ id: t.id, error: `Umlaut in EN_TEMPLATES.${key}: ${line.trim()}` });
+          }
+        }
+        for (const id of Object.keys(EN_TEMPLATES)) if (!isType(id)) errors.push({ id, error: "EN_TEMPLATES-Eintrag ohne Diagrammtyp" });
+        for (const id of Object.keys(EN_SNIPPETS.byType)) if (!isType(id)) errors.push({ id, error: "EN_SNIPPETS.byType-Eintrag ohne Diagrammtyp" });
+
+        setLanguage("de");
+        const deByType = Object.fromEntries(DIAGRAM_TYPES.map((t) => [t.id, snippetsFor(t.id)]));
+        setLanguage("en");
+        let checked = DIAGRAM_TYPES.length;
+        for (const t of DIAGRAM_TYPES) {
+          const de = deByType[t.id];
+          const en = snippetsFor(t.id);
+          for (const label of Object.keys(EN_SNIPPETS.byType[t.id] ?? {})) {
+            if (!de.some((sn) => sn.label === label)) errors.push({ id: t.id, error: `EN_SNIPPETS.byType: unbekanntes Label "${label}"` });
+          }
+          de.forEach((sn, i) => {
+            checked++;
+            const where = `${t.id} / ${sn.label}`;
+            const e = en[i];
+            if (!(sn.label in EN_SNIPPETS.labels)) errors.push({ id: where, error: "fehlt in EN_SNIPPETS.labels" });
+            if (umlaut.test(e.label)) errors.push({ id: where, error: `Umlaut im englischen Label: ${e.label}` });
+            if (umlaut.test(e.code)) errors.push({ id: where, error: `Umlaut im englischen Code: ${e.code}` });
+            // Platzhalter, der noch einen deutschen Vorgabewert trägt (z. B. aus byType)
+            for (const m of e.code.matchAll(/#\{([^}]*)\}/g)) {
+              if (m[1] in EN_SNIPPETS.placeholders && EN_SNIPPETS.placeholders[m[1]] !== m[1])
+                errors.push({ id: where, error: `unübersetzter Platzhalter: #{${m[1]}}` });
+            }
+          });
+        }
+        setLanguage(prev);
+        return { checked, errors };
+      };
       // Syntax-Highlighter über alle Vorlagen laufen lassen (hängt er, wirft CodeMirror einen Fehler)
-      window.runHighlight = async () => {
+      window.runHighlight = async (lang = "de") => {
         const { mermaidStreamLanguage } = await import("../taskpane/editor/mermaidLanguage.ts");
         const results = [];
-        for (const t of DIAGRAM_TYPES) {
+        const types = typesFor(lang);
+        for (const t of types) {
           try {
             const tree = mermaidStreamLanguage.parser.parse(t.template);
             results.push({ id: t.id, ok: tree.length === t.template.length });
@@ -82,7 +141,7 @@
         // Snippets und typische halbfertige Eingaben beim Tippen
         const partial = ["flowchart TD\n    A[", "A((", "x{{", "graph\n  a --> b[(", 'A["unvollständig', "---\ntitle: x", "%%{init", "A@{ shape: ", "A -->|Text", "Note right of A:", "a:::", "<<", "-", "|o--", "C4Context\n  Person("];
         const texts = [
-          ...DIAGRAM_TYPES.flatMap((t) => snippetsFor(t.id).map((sn) => ({ id: `${t.id}/${sn.label}`, text: expandSnippet(sn.code) }))),
+          ...types.flatMap((t) => snippetsFor(t.id).map((sn) => ({ id: `${t.id}/${sn.label}`, text: expandSnippet(sn.code) }))),
           ...partial.map((p, i) => ({ id: `partial-${i}`, text: p })),
         ];
         for (const { id, text } of texts) {
@@ -95,7 +154,7 @@
         return results;
       };
       // Dokumentdesign: Parser prüfen und alle Vorlagen mit dem gelesenen Design rendern
-      window.runThemeTest = async (only = null) => {
+      window.runThemeTest = async (only = null, lang = "de") => {
         const { parseThemeXml, themeFromFlatOpc, completeTheme } = await import("../shared/docTheme.ts");
         const { setDocumentTheme } = await import("../shared/render.ts");
         const xml = (await import("./fixtures/theme-office2013.xml?raw")).default;
@@ -122,13 +181,13 @@
 
         setDocumentTheme(completeTheme(parsed));
         const renders = [];
-        for (const t of DIAGRAM_TYPES.filter((x) => !only || only.includes(x.id))) {
+        for (const t of typesFor(lang, only)) {
           try {
             const r = await renderDiagram(t.template, { ...DEFAULT_OPTIONS, theme: "document" }, 1.5);
             const usesFont = r.svg.includes("Calibri");
-            renders.push({ id: t.id, theme: "document", ok: true, w: Math.round(r.widthPx), h: Math.round(r.heightPx), ms: 0, png: r.pngBase64, usesFont, usesFill: /#e7e6e6/i.test(r.svg), usesLine: /#44546a/i.test(r.svg) });
+            renders.push({ id: t.id, theme: "document", lang, ok: true, w: Math.round(r.widthPx), h: Math.round(r.heightPx), ms: 0, png: r.pngBase64, usesFont, usesFill: /#e7e6e6/i.test(r.svg), usesLine: /#44546a/i.test(r.svg) });
           } catch (e) {
-            renders.push({ id: t.id, theme: "document", ok: false, error: formatError(e) });
+            renders.push({ id: t.id, theme: "document", lang, ok: false, error: formatError(e) });
           }
         }
         return { checks, renders };
